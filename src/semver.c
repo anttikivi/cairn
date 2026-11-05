@@ -1,21 +1,21 @@
 /*
  * SPDX-FileCopyrightText: (C) 2026 Antti Kivi <antti@anttikivi.com>
  *
- * SPDX-License-Identifier: GPL-3.0-or-later
+ * SPDX-License-Identifier: LGPL-3.0-or-later
  */
 
-#include "semver.h"
+#include <cairn/semver.h>
 
 #include <stddef.h>
 
-#include "debug.h"
+#include <cairn/debug.h>
 
-enum error
-semver_parse(struct semver *out, char *s, struct buffer *msg)
+enum cairn_error
+cairn_semver_parse(struct cairn_semver *out, char *s, struct cairn_buffer *msg)
 {
-    ASSERT(out != NULL);
-    ASSERT(s != NULL);
-    ASSERT(msg != NULL);
+    CAIRN_ASSERT(out != NULL);
+    CAIRN_ASSERT(s != NULL);
+    CAIRN_ASSERT(msg != NULL);
 
-    return ERR_OK;
+    return CAIRN_ERR_OK;
 }

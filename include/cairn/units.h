@@ -1,12 +1,12 @@
 /*
  * SPDX-FileCopyrightText: (C) 2026 Antti Kivi <antti@anttikivi.com>
  *
- * SPDX-License-Identifier: GPL-3.0-or-later
+ * SPDX-License-Identifier: LGPL-3.0-or-later
  */
 
-#ifndef BASE_UNITS_H
-#define BASE_UNITS_H
+#ifndef CAIRN_UNITS_H
+#define CAIRN_UNITS_H
 
-#define KB(n) ((n) << 10U)
+#define CAIRN_KB(n) ((n) << 10U)
 
 #endif

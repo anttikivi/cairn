@@ -1,29 +1,29 @@
 /*
  * SPDX-FileCopyrightText: (C) 2026 Antti Kivi <antti@anttikivi.com>
  *
- * SPDX-License-Identifier: GPL-3.0-or-later
+ * SPDX-License-Identifier: LGPL-3.0-or-later
  */
 
-#ifndef BASE_BUFFER_H
-#define BASE_BUFFER_H
+#ifndef CAIRN_BUFFER_H
+#define CAIRN_BUFFER_H
 
 #include <stddef.h>
 
-#ifndef BUFFER_MAX_BYTES
-#    include "units.h"
-#    define BUFFER_MAX_BYTES KB(1U)
+#ifndef CAIRN_BUFFER_MAX_BYTES
+#    include <cairn/units.h>
+#    define CAIRN_BUFFER_MAX_BYTES CAIRN_KB(1U)
 #endif
 
-struct buffer
+struct cairn_buffer
 {
-    char data[BUFFER_MAX_BYTES];
+    char data[CAIRN_BUFFER_MAX_BYTES];
     size_t len;
 };
 
-void buffer_init(struct buffer *b);
-void buffer_append_char(struct buffer *b, char c);
-void buffer_append_str(struct buffer *b, const char *s);
-void buffer_append_size(struct buffer *b, size_t d);
-void buffer_append_int(struct buffer *b, int d);
+void cairn_buffer_init(struct cairn_buffer *b);
+void cairn_buffer_append_char(struct cairn_buffer *b, char c);
+void cairn_buffer_append_str(struct cairn_buffer *b, const char *s);
+void cairn_buffer_append_size(struct cairn_buffer *b, size_t d);
+void cairn_buffer_append_int(struct cairn_buffer *b, int d);
 
 #endif

@@ -1,13 +1,13 @@
 /*
  * SPDX-FileCopyrightText: (C) 2026 Antti Kivi <antti@anttikivi.com>
  *
- * SPDX-License-Identifier: GPL-3.0-or-later
+ * SPDX-License-Identifier: LGPL-3.0-or-later
  */
 
-#include "strings.h"
+#include <cairn/strings.h>
 
 size_t
-str_nlen(const char *s, size_t n)
+cairn_str_nlen(const char *s, size_t n)
 {
     size_t len = 0U;
     if (s != NULL)
@@ -21,7 +21,7 @@ str_nlen(const char *s, size_t n)
 }
 
 int
-str_ncmp(const char *l, size_t n, const char *r, size_t m)
+cairn_str_ncmp(const char *l, size_t n, const char *r, size_t m)
 {
     int result = 0;
 

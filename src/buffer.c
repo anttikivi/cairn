@@ -1,54 +1,54 @@
 /*
  * SPDX-FileCopyrightText: (C) 2026 Antti Kivi <antti@anttikivi.com>
  *
- * SPDX-License-Identifier: GPL-3.0-or-later
+ * SPDX-License-Identifier: LGPL-3.0-or-later
  */
 
-#include "buffer.h"
+#include <cairn/buffer.h>
 
 #include <stddef.h>
 
-#include "bool.h"
-#include "debug.h"
-#include "strings.h"
+#include <cairn/bool.h>
+#include <cairn/debug.h>
+#include <cairn/strings.h>
 
-#ifndef BUFFER_ALLOW_APPEND_INT
-#    define BUFFER_ALLOW_APPEND_INT (0)
+#ifndef CAIRN_BUFFER_ALLOW_APPEND_INT
+#    define CAIRN_BUFFER_ALLOW_APPEND_INT (0)
 #endif
 
 void
-buffer_init(struct buffer *b)
+cairn_buffer_init(struct cairn_buffer *b)
 {
-    ASSERT(b != NULL);
+    CAIRN_ASSERT(b != NULL);
     b->len = 0;
     b->data[0] = '\0';
 }
 
 void
-buffer_append_char(struct buffer *b, char c)
+cairn_buffer_append_char(struct cairn_buffer *b, char c)
 {
-    ASSERT(b != NULL);
+    CAIRN_ASSERT(b != NULL);
 
-    if (b->len < (BUFFER_MAX_BYTES - 1U))
+    if (b->len < (CAIRN_BUFFER_MAX_BYTES - 1U))
     {
         b->data[b->len] = c;
         b->data[b->len + 1] = '\0';
         b->len++;
     }
 
-    ASSERT(b->len <= BUFFER_MAX_BYTES);
-    ASSERT(str_nlen(b->data, BUFFER_MAX_BYTES) <= b->len);
+    CAIRN_ASSERT(b->len <= CAIRN_BUFFER_MAX_BYTES);
+    CAIRN_ASSERT(cairn_str_nlen(b->data, CAIRN_BUFFER_MAX_BYTES) <= b->len);
 }
 
 void
-buffer_append_str(struct buffer *b, const char *s)
+cairn_buffer_append_str(struct cairn_buffer *b, const char *s)
 {
     size_t i = 0;
 
-    ASSERT(b != NULL);
-    ASSERT(s != NULL);
+    CAIRN_ASSERT(b != NULL);
+    CAIRN_ASSERT(s != NULL);
 
-    while ((s[i] != '\0') && (b->len < (BUFFER_MAX_BYTES - 1U)))
+    while ((s[i] != '\0') && (b->len < (CAIRN_BUFFER_MAX_BYTES - 1U)))
     {
         b->data[b->len] = s[i];
         b->len++;
@@ -57,18 +57,18 @@ buffer_append_str(struct buffer *b, const char *s)
 
     b->data[b->len] = '\0';
 
-    ASSERT(b->len <= BUFFER_MAX_BYTES);
-    ASSERT(str_nlen(b->data, BUFFER_MAX_BYTES) <= b->len);
+    CAIRN_ASSERT(b->len <= CAIRN_BUFFER_MAX_BYTES);
+    CAIRN_ASSERT(cairn_str_nlen(b->data, CAIRN_BUFFER_MAX_BYTES) <= b->len);
 }
 
 void
-buffer_append_size(struct buffer *b, size_t d)
+cairn_buffer_append_size(struct cairn_buffer *b, size_t d)
 {
     char tmp[32]; /* overkill */
     size_t i = 0U;
     size_t u = d;
 
-    ASSERT(b != NULL);
+    CAIRN_ASSERT(b != NULL);
 
     do
     {
@@ -77,7 +77,7 @@ buffer_append_size(struct buffer *b, size_t d)
         u /= 10U;
     } while (u > 0U);
 
-    while ((i > 0U) && (b->len < (BUFFER_MAX_BYTES - 1U)))
+    while ((i > 0U) && (b->len < (CAIRN_BUFFER_MAX_BYTES - 1U)))
     {
         i--;
         b->data[b->len] = tmp[i];
@@ -86,26 +86,26 @@ buffer_append_size(struct buffer *b, size_t d)
 
     b->data[b->len] = '\0';
 
-    ASSERT(b->len < BUFFER_MAX_BYTES);
-    ASSERT(str_nlen(b->data, BUFFER_MAX_BYTES) <= b->len);
+    CAIRN_ASSERT(b->len < CAIRN_BUFFER_MAX_BYTES);
+    CAIRN_ASSERT(cairn_str_nlen(b->data, CAIRN_BUFFER_MAX_BYTES) <= b->len);
 }
 
 void
-buffer_append_int(struct buffer *b, int d)
+cairn_buffer_append_int(struct cairn_buffer *b, int d)
 {
     char tmp[32]; /* overkill */
     size_t i = 0U;
     unsigned int u;
 
-#if !BUFFER_ALLOW_APPEND_INT
-    ASSERT(false);
+#if !CAIRN_BUFFER_ALLOW_APPEND_INT
+    CAIRN_ASSERT(CAIRN_FALSE);
 #endif
 
-    ASSERT(b != NULL);
+    CAIRN_ASSERT(b != NULL);
 
     if (d < 0)
     {
-        if (b->len < (BUFFER_MAX_BYTES - 1U))
+        if (b->len < (CAIRN_BUFFER_MAX_BYTES - 1U))
         {
             b->data[b->len] = '-';
             b->len++;
@@ -124,7 +124,7 @@ buffer_append_int(struct buffer *b, int d)
         u /= 10U;
     } while (u > 0U);
 
-    while ((i > 0U) && (b->len < (BUFFER_MAX_BYTES - 1U)))
+    while ((i > 0U) && (b->len < (CAIRN_BUFFER_MAX_BYTES - 1U)))
     {
         i--;
         b->data[b->len] = tmp[i];
@@ -133,6 +133,6 @@ buffer_append_int(struct buffer *b, int d)
 
     b->data[b->len] = '\0';
 
-    ASSERT(b->len < BUFFER_MAX_BYTES);
-    ASSERT(str_nlen(b->data, BUFFER_MAX_BYTES) <= b->len);
+    CAIRN_ASSERT(b->len < CAIRN_BUFFER_MAX_BYTES);
+    CAIRN_ASSERT(cairn_str_nlen(b->data, CAIRN_BUFFER_MAX_BYTES) <= b->len);
 }

@@ -1,25 +1,26 @@
 /*
  * SPDX-FileCopyrightText: (C) 2026 Antti Kivi <antti@anttikivi.com>
  *
- * SPDX-License-Identifier: GPL-3.0-or-later
+ * SPDX-License-Identifier: LGPL-3.0-or-later
  */
 
-#ifndef BASE_SEMVER_H
-#define BASE_SEMVER_H
+#ifndef CAIRN_SEMVER_H
+#define CAIRN_SEMVER_H
 
-#include "buffer.h"
-#include "error.h"
-#include "int.h"
+#include <cairn/buffer.h>
+#include <cairn/error.h>
+#include <cairn/int.h>
 
-struct semver
+struct cairn_semver
 {
-    u32 major;
-    u32 minor;
-    u32 patch;
+    cairn_u32 major;
+    cairn_u32 minor;
+    cairn_u32 patch;
     const char *pre;
     const char *build;
 };
 
-enum error semver_parse(struct semver *out, char *s, struct buffer *msg);
+enum cairn_error cairn_semver_parse(struct cairn_semver *out, char *s,
+                                    struct cairn_buffer *msg);
 
 #endif

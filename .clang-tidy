@@ -7,6 +7,6 @@ Checks: >
   performance-*,
   portability-*
 
-HeaderFilterRegex: "(^|/)(src|test)/"
+HeaderFilterRegex: "(^|/)(include/cairn|src|test)/"
 SystemHeaders: false
 WarningsAsErrors: "*"

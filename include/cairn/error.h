@@ -1,18 +1,18 @@
 /*
  * SPDX-FileCopyrightText: (C) 2026 Antti Kivi <antti@anttikivi.com>
  *
- * SPDX-License-Identifier: GPL-3.0-or-later
+ * SPDX-License-Identifier: LGPL-3.0-or-later
  */
 
-#ifndef BASE_ERROR_H
-#define BASE_ERROR_H
+#ifndef CAIRN_ERROR_H
+#define CAIRN_ERROR_H
 
-enum error
+enum cairn_error
 {
-    ERR_OK,
-    ERR_ARGS_INVALID,
-    ERR_IO_WRITE_FAILED,
-    ERR_IO_INVALID
+    CAIRN_ERR_OK,
+    CAIRN_ERR_ARGS_INVALID,
+    CAIRN_ERR_IO_WRITE_FAILED,
+    CAIRN_ERR_IO_INVALID
 };
 
 #endif

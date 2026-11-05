@@ -1,11 +1,11 @@
 /*
  * SPDX-FileCopyrightText: (C) 2026 Antti Kivi <antti@anttikivi.com>
  *
- * SPDX-License-Identifier: GPL-3.0-or-later
+ * SPDX-License-Identifier: LGPL-3.0-or-later
  */
 
-#ifndef BASE_STRINGS_H
-#define BASE_STRINGS_H
+#ifndef CAIRN_STRINGS_H
+#define CAIRN_STRINGS_H
 
 #include <stddef.h>
 
@@ -20,7 +20,7 @@
  * Return the length of the given null-terminated byte string up to n bytes and
  * up to and not including the null character.
  */
-size_t str_nlen(const char *s, size_t n);
+size_t cairn_str_nlen(const char *s, size_t n);
 
 /*
  * Compare two null-terminated byte string lexicographically. Characters
@@ -29,6 +29,6 @@ size_t str_nlen(const char *s, size_t n);
  * Essentially they should be the buffer sizes if the goal is to check whether
  * the to strings are equal.
  */
-int str_ncmp(const char *l, size_t n, const char *r, size_t m);
+int cairn_str_ncmp(const char *l, size_t n, const char *r, size_t m);
 
 #endif

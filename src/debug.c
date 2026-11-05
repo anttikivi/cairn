@@ -1,18 +1,18 @@
 /*
  * SPDX-FileCopyrightText: (C) 2026 Antti Kivi <antti@anttikivi.com>
  *
- * SPDX-License-Identifier: GPL-3.0-or-later
+ * SPDX-License-Identifier: LGPL-3.0-or-later
  */
 
-#include "debug.h"
+#include <cairn/debug.h>
 
 #ifndef NDEBUG
 
 #    include <stddef.h>
 #    include <stdlib.h>
 
-#    include "bool.h"
-#    include "int.h"
+#    include <cairn/bool.h>
+#    include <cairn/int.h>
 
 #    ifdef _WIN32
 #        define WIN32_LEAN_AND_MEAN
@@ -20,17 +20,17 @@
 #    else
 #        include <errno.h>
 #        include <unistd.h>
-#        ifndef ERR_STDERR_FD
-#            define ERR_STDERR_FD (2)
+#        ifndef CAIRN_ERR_STDERR_FD
+#            define CAIRN_ERR_STDERR_FD (2)
 #        endif
 #    endif
 
-#    ifndef ASSERT_MSG_MAX_BYTES
-#        define ASSERT_MSG_MAX_BYTES (1024)
+#    ifndef CAIRN_ASSERT_MSG_MAX_BYTES
+#        define CAIRN_ASSERT_MSG_MAX_BYTES (1024)
 #    endif
 
-#    ifndef ASSERT_MAX_OUTPUT_RETRIES
-#        define ASSERT_MAX_OUTPUT_RETRIES (50U)
+#    ifndef CAIRN_ASSERT_MAX_OUTPUT_RETRIES
+#        define CAIRN_ASSERT_MAX_OUTPUT_RETRIES (50U)
 #    endif
 
 static void
@@ -71,9 +71,9 @@ appends(char *buf, size_t *len, size_t cap, const char *s)
 }
 
 void
-err_assert_failed(const char *expr, const char *file, int line)
+cairn_err_assert_failed(const char *expr, const char *file, int line)
 {
-    char msg[ASSERT_MSG_MAX_BYTES];
+    char msg[CAIRN_ASSERT_MSG_MAX_BYTES];
     size_t len = 0U;
 
     appends(msg, &len, sizeof(msg), "Assertion failed: ");
@@ -117,27 +117,27 @@ err_assert_failed(const char *expr, const char *file, int line)
 #    else
     {
         size_t written = 0U;
-        u8 retries = 0U;
-        bool end = false;
+        cairn_u8 retries = 0U;
+        cairn_bool end = CAIRN_FALSE;
         while ((written < len) && !end)
         {
             ssize_t ret = 0;
             errno = 0;
-            ret = write(ERR_STDERR_FD, &msg[written], len - written);
+            ret = write(CAIRN_ERR_STDERR_FD, &msg[written], len - written);
             if (ret <= 0)
             {
                 if ((errno == EINTR) || (errno == EAGAIN) ||
                     (errno == EWOULDBLOCK))
                 {
                     retries++;
-                    if (retries >= ASSERT_MAX_OUTPUT_RETRIES)
+                    if (retries >= CAIRN_ASSERT_MAX_OUTPUT_RETRIES)
                     {
-                        end = true;
+                        end = CAIRN_TRUE;
                     }
                 }
                 else
                 {
-                    end = true;
+                    end = CAIRN_TRUE;
                 }
             }
             else
