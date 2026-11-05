@@ -1,0 +1,11 @@
+---
+BasedOnStyle: LLVM
+Language: C
+AlignConsecutiveMacros: Consecutive
+AllowShortIfStatementsOnASingleLine: false
+BreakAfterReturnType: AllDefinitions
+BreakBeforeBraces: Allman
+ColumnLimit: 80
+IndentCaseLabels: false
+IndentPPDirectives: AfterHash
+IndentWidth: 4

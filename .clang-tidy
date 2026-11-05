@@ -1,0 +1,12 @@
+---
+Checks: >
+  clang-diagnostic-*,
+  clang-analyzer-*,
+  bugprone-*,
+  cert-*,
+  performance-*,
+  portability-*
+
+HeaderFilterRegex: "(^|/)(src|test)/"
+SystemHeaders: false
+WarningsAsErrors: "*"
