@@ -1,6 +1,5 @@
 ---
 BasedOnStyle: LLVM
-Language: C
 AlignConsecutiveMacros: Consecutive
 AllowShortIfStatementsOnASingleLine: false
 BreakAfterReturnType: AllDefinitions
