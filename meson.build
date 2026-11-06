@@ -51,6 +51,8 @@ if cc.get_argument_syntax() == 'gcc'
     )
 endif
 
+add_project_arguments(project_arguments, language: 'c')
+
 src_paths = [
     'src/buffer.c',
     'src/debug.c',
