@@ -20,11 +20,6 @@ environment:
 secrets:
   - 4b26352f-2d22-413b-821b-e94201815851
 
-submitter:
-  git.sr.ht:
-    allow-refs:
-      - refs/heads/main
-
 sources:
   - https://git.sr.ht/~anttikivi/cairn
   - https://git.sr.ht/~lattis/muon#0.7.1
