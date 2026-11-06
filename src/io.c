@@ -45,7 +45,7 @@ static enum cairn_error
 win32_write_all(DWORD handle_id, const char *s)
 {
     enum cairn_error result = CAIRN_ERR_OK;
-    HANDLE handle;
+    HANDLE handle = NULL;
     size_t len = 0U;
     DWORD written = 0U;
 
