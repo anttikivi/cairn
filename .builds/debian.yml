@@ -1,24 +1,102 @@
 ---
 image: debian/stable
 
+packages:
+  - clang
+  - clang-format
+  - clang-tidy
+  - meson
+  - muon
+
 sources:
   - https://git.sr.ht/~anttikivi/cairn
 
 tasks:
+  - deps: |
+      curl -LsSf https://astral.sh/uv/install.sh | sudo env UV_UNMANAGED_INSTALL="/usr/local/bin" sh
+
+  - lint: |
+      cd cairn
+      meson setup build/lint -Dbuildtype=debug
+      ninja -C build/lint clang-format-check
+      ninja -C build/lint clang-tidy
+      ninja -C build/lint reuse-check
+
   - build: |
       cd cairn
       meson setup build/debug -Dbuildtype=debug
       meson compile -C build/debug
+
+  - test: |
+      cd cairn
+      meson test -C build/debug --print-errorlogs
 
   - build_asan_ubsan: |
       cd cairn
       meson setup build/debug_asan_ubsan -Dbuildtype=debug -Db_sanitize=address,undefined
       meson compile -C build/debug_asan_ubsan
 
-  - test: |
-      cd cairn
-      meson test -C build/debug
-
   - test_asan_ubsan: |
       cd cairn
-      meson test -C build/debug_asan_ubsan
+      meson test -C build/debug_asan_ubsan --print-errorlogs
+
+  - build_memsan: |
+      cd cairn
+      CC=clang meson setup build/debug_memsan -Dbuildtype=debug -Db_sanitize=memory
+      meson compile -C build/debug_memsan
+
+  - test_memsan: |
+      cd cairn
+      meson test -C build/debug_memsan --print-errorlogs
+
+  - build_release: |
+      cd cairn
+      meson setup build/release -Dbuildtype=release
+      meson compile -C build/release
+
+  - test_release: |
+      cd cairn
+      meson test -C build/release --print-errorlogs
+
+  - muon_lint: |
+      cd cairn
+      muon setup -Dbuildtype=debug build/muon/lint
+      muon -C build/muon/lint samu clang-format-check
+      muon -C build/muon/lint samu clang-tidy
+      muon -C build/muon/lint samu reuse-check
+
+  - muon_build: |
+      cd cairn
+      muon setup -Dbuildtype=debug build/muon/debug
+      muon -C build/muon/debug samu
+
+  - muon_test: |
+      cd cairn
+      muon -C build/muon/debug test
+
+  - muon_build_asan_ubsan: |
+      cd cairn
+      muon setup -Dbuildtype=debug -Db_sanitize=address,undefined build/muon/debug_asan_ubsan
+      muon -C build/muon/debug_asan_ubsan samu
+
+  - muon_test_asan_ubsan: |
+      cd cairn
+      muon -C build/muon/debug_asan_ubsan test
+
+  - muon_build_memsan: |
+      cd cairn
+      CC=clang muon setup -Dbuildtype=debug -Db_sanitize=memory build/muon/debug_memsan
+      muon -C build/muon/debug_memsan samu
+
+  - muon_test_memsan: |
+      cd cairn
+      muon -C build/muon/debug_memsan test
+
+  - muon_build_release: |
+      cd cairn
+      muon setup -Dbuildtype=release build/muon/release
+      muon -C build/muon/release samu
+
+  - muon_test_release: |
+      cd cairn
+      muon -C build/muon/release test
