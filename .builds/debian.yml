@@ -11,7 +11,6 @@ packages:
   - clang-tidy
   - libclang-rt-dev
   - meson
-  - muon
 
 environment:
   CC: gcc
@@ -19,10 +18,15 @@ environment:
 
 sources:
   - https://git.sr.ht/~anttikivi/cairn
+  - https://git.sr.ht/~lattis/muon#0.7.1
 
 tasks:
   - deps: |
       curl -LsSf https://astral.sh/uv/install.sh | sudo env UV_UNMANAGED_INSTALL="/usr/local/bin" sh
+      cd muon
+      meson setup build --buildtype=release --prefix=/usr/local -Dsamurai=enabled
+      meson compile -C build
+      sudo meson install -C build
 
   - lint: |
       cd cairn
