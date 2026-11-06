@@ -7,15 +7,16 @@
 #ifndef CAIRN_SEMVER_H
 #define CAIRN_SEMVER_H
 
+#include <stdint.h>
+
 #include <cairn/buffer.h>
 #include <cairn/error.h>
-#include <cairn/int.h>
 
 struct cairn_semver
 {
-    cairn_u32 major;
-    cairn_u32 minor;
-    cairn_u32 patch;
+    uint32_t major;
+    uint32_t minor;
+    uint32_t patch;
     const char *pre;
     const char *build;
 };

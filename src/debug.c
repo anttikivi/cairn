@@ -8,11 +8,10 @@
 
 #ifndef NDEBUG
 
+#    include <stdbool.h>
 #    include <stddef.h>
+#    include <stdint.h>
 #    include <stdlib.h>
-
-#    include <cairn/bool.h>
-#    include <cairn/int.h>
 
 #    ifdef _WIN32
 #        define WIN32_LEAN_AND_MEAN
@@ -117,8 +116,8 @@ cairn_err_assert_failed(const char *expr, const char *file, int line)
 #    else
     {
         size_t written = 0U;
-        cairn_u8 retries = 0U;
-        cairn_bool end = CAIRN_FALSE;
+        uint8_t retries = 0U;
+        bool end = false;
         while ((written < len) && !end)
         {
             ssize_t ret = 0;
@@ -132,12 +131,12 @@ cairn_err_assert_failed(const char *expr, const char *file, int line)
                     retries++;
                     if (retries >= CAIRN_ASSERT_MAX_OUTPUT_RETRIES)
                     {
-                        end = CAIRN_TRUE;
+                        end = true;
                     }
                 }
                 else
                 {
-                    end = CAIRN_TRUE;
+                    end = true;
                 }
             }
             else

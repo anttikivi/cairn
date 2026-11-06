@@ -6,9 +6,9 @@
 
 #include <cairn/buffer.h>
 
+#include <stdbool.h>
 #include <stddef.h>
 
-#include <cairn/bool.h>
 #include <cairn/debug.h>
 #include <cairn/strings.h>
 
@@ -98,7 +98,7 @@ cairn_buffer_append_int(struct cairn_buffer *b, int d)
     unsigned int u;
 
 #if !CAIRN_BUFFER_ALLOW_APPEND_INT
-    CAIRN_ASSERT(CAIRN_FALSE);
+    CAIRN_ASSERT(false);
 #endif
 
     CAIRN_ASSERT(b != NULL);

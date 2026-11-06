@@ -6,11 +6,12 @@
 
 #include <cairn/io.h>
 
+#include <limits.h>
 #include <stddef.h>
+#include <stdint.h>
 
 #include <cairn/debug.h>
 #include <cairn/error.h>
-#include <cairn/int.h>
 
 #ifndef CAIRN_IO_MAX_OUTPUT_BYTES
 #    define CAIRN_IO_MAX_OUTPUT_BYTES (4096U)
@@ -105,7 +106,7 @@ posix_write_all(int fd, const char *s)
     enum cairn_error result = CAIRN_ERR_OK;
     size_t len = 0U;
     size_t written = 0U;
-    cairn_u8 retries = 0U;
+    uint8_t retries = 0U;
 
     if (s == NULL)
     {

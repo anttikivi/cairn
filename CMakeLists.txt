@@ -32,7 +32,7 @@ endif()
 function(cairn_configure_target target)
     set_target_properties(
         "${target}"
-        PROPERTIES C_STANDARD 90
+        PROPERTIES C_STANDARD 99
                    C_STANDARD_REQUIRED ON
                    C_EXTENSIONS OFF)
 
@@ -92,11 +92,9 @@ endfunction()
 
 set(CAIRN_SOURCES src/buffer.c src/debug.c src/io.c src/semver.c src/strings.c src/test.c)
 set(CAIRN_INCLUDES
-    include/cairn/bool.h
     include/cairn/buffer.h
     include/cairn/debug.h
     include/cairn/error.h
-    include/cairn/int.h
     include/cairn/io.h
     include/cairn/semver.h
     include/cairn/strings.h
