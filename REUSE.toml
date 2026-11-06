@@ -4,11 +4,11 @@ version = 1
 path = [
   "**/.gitignore",
   ".clang-format",
+  ".clang-format-include",
   ".clang-tidy",
   ".clangd",
   ".editorconfig",
   "build/",
-  "cmake/cairnConfig.cmake.in",
   "README.md",
 ]
 SPDX-FileCopyrightText = "© 2026 Antti Kivi <antti@anttikivi.com>"

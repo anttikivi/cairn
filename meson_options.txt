@@ -1,0 +1,7 @@
+option('tests', type: 'boolean', value: true, description: 'Build the tests')
+option(
+    'uvx',
+    type: 'feature',
+    value: 'auto',
+    description: 'Provide the targets that require uvx',
+)
