@@ -8,8 +8,6 @@ image: alpine/latest
 packages:
   - build-base
   - clang
-  - libasan
-  - libubsan
   - meson
 
 environment:
