@@ -1,5 +1,7 @@
 # Cairn
 
+[![builds.sr.ht status](https://builds.sr.ht/~anttikivi/cairn.svg)](https://builds.sr.ht/~anttikivi/cairn?)
+
 `cairn` is a C utility library that provides useful functions. It also replaces
 some C standard library functionality with alternatives that aim to be useful in
 projects that follow the MISRA C guidelines.
