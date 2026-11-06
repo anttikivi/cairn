@@ -51,19 +51,35 @@ if cc.get_argument_syntax() == 'gcc'
     )
 endif
 
-include = include_directories('include')
-src = files(
+src_paths = [
     'src/buffer.c',
     'src/debug.c',
     'src/io.c',
     'src/semver.c',
     'src/strings.c',
     'src/test.c',
-)
+]
+header_paths = [
+    'include/cairn/buffer.h',
+    'include/cairn/debug.h',
+    'include/cairn/error.h',
+    'include/cairn/io.h',
+    'include/cairn/semver.h',
+    'include/cairn/strings.h',
+    'include/cairn/test.h',
+    'include/cairn/units.h',
+]
+test_names = ['buffer', 'strings']
+test_paths = []
+foreach name : test_names
+    test_paths += 'test' / (name + '.c')
+endforeach
+
+include = include_directories('include')
 
 lib = static_library(
     'cairn',
-    src,
+    files(src_paths),
     include_directories: include,
     install: true,
 )
@@ -75,7 +91,7 @@ install_subdir('include/cairn', install_dir: get_option('includedir'))
 import('pkgconfig').generate(lib, name: 'cairn')
 
 if get_option('tests')
-    foreach name : ['buffer', 'strings']
+    foreach name : test_names
         test(
             name,
             executable(
@@ -87,10 +103,37 @@ if get_option('tests')
     endforeach
 endif
 
-uvx = find_program('uvx', required: get_option('uvx'))
+root = meson.project_source_root()
 
+c_paths = []
+foreach path : src_paths + test_paths
+    c_paths += root / path
+endforeach
+
+fmt_paths = c_paths
+foreach path : header_paths
+    fmt_paths += root / path
+endforeach
+
+clang_format = find_program('clang-format', required: false)
+if clang_format.found()
+    run_target('clang-format', command: [clang_format, '-i'] + fmt_paths)
+    run_target(
+        'clang-format-check',
+        command: [clang_format, '--dry-run', '--Werror'] + fmt_paths,
+    )
+endif
+
+clang_tidy = find_program('clang-tidy', required: false)
+if clang_tidy.found()
+    run_target(
+        'clang-tidy',
+        command: [clang_tidy, '-p', meson.project_build_root(), '--quiet'] + c_paths,
+    )
+endif
+
+uvx = find_program('uvx', required: false)
 if uvx.found()
-    root = meson.project_source_root()
     reuse = [uvx, '--from=reuse[charset-normalizer]', 'reuse', '--root', root]
 
     escapes_at = '\\@'.format() == '@'
@@ -117,3 +160,12 @@ if uvx.found()
     )
     run_target('reuse-check', command: reuse + ['lint'])
 endif
+
+summary(
+    {
+        'clang-format': clang_format.found(),
+        'clang-tidy': clang_tidy.found(),
+        'uvx': uvx.found(),
+    },
+    section: 'Developer tools',
+)
