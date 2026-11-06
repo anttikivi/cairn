@@ -9,11 +9,13 @@ packages:
   - clang
   - clang-format
   - clang-tidy
+  - libclang-rt-dev
   - meson
   - muon
 
 environment:
   CC: gcc
+  UBSAN_OPTIONS: halt_on_error=1:print_stacktrace=1
 
 sources:
   - https://git.sr.ht/~anttikivi/cairn

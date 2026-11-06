@@ -6,21 +6,16 @@
 image: freebsd/latest
 
 packages:
-  - clang
-  - clang-format
-  - clang-tidy
   - meson
 
 environment:
   CC: clang
+  UBSAN_OPTIONS: halt_on_error=1:print_stacktrace=1
 
 sources:
   - https://git.sr.ht/~anttikivi/cairn
 
 tasks:
-  - deps: |
-      curl -LsSf https://astral.sh/uv/install.sh | sudo env UV_UNMANAGED_INSTALL="/usr/local/bin" sh
-
   - build: |
       cd cairn
       meson setup build/debug -Dbuildtype=debug
