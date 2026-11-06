@@ -17,5 +17,9 @@ cairn_semver_parse(struct cairn_semver *out, char *s, struct cairn_buffer *msg)
     CAIRN_ASSERT(s != NULL);
     CAIRN_ASSERT(msg != NULL);
 
+    (void)out;
+    (void)s;
+    (void)msg;
+
     return CAIRN_ERR_OK;
 }
