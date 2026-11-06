@@ -172,6 +172,7 @@ if uvx.found()
             '--license=LGPL-3.0-or-later',
             '--copyright-prefix=spdx-c',
             '--recursive',
+            root / '.builds',
             root / 'meson.build',
             root / 'meson_options.txt',
             root / 'include',
