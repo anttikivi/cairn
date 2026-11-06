@@ -93,11 +93,18 @@ if uvx.found()
     root = meson.project_source_root()
     reuse = [uvx, '--from=reuse[charset-normalizer]', 'reuse', '--root', root]
 
+    escapes_at = '\\@'.format() == '@'
+
+    copyright = '--copyright=Antti Kivi <antti@anttikivi.com>'
+    if escapes_at
+        copyright = '--copyright=Antti Kivi <antti\\@anttikivi.com>'
+    endif
+
     run_target(
         'reuse-annotate',
         command: reuse + [
             'annotate',
-            '--copyright=Antti Kivi <antti@anttikivi.com>',
+            copyright,
             '--license=LGPL-3.0-or-later',
             '--copyright-prefix=spdx-c',
             '--recursive',
