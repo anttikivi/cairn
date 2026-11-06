@@ -40,8 +40,8 @@ test_str_ncmp(void)
     struct cairn_test_status status;
     char buf_1[] = {'a', 'b', 'c'};
     char buf_2[] = {'a', 'b', 'c', 'd'};
-    char high[] = {(char)0x80, '\0'};
-    char low[] = {(char)0x7f, '\0'};
+    char high[] = "\x80";
+    char low[] = "\x7f";
 
     cairn_test_start(&status, "strings/str_ncmp");
 
