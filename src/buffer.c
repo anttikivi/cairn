@@ -6,15 +6,10 @@
 
 #include <cairn/buffer.h>
 
-#include <stdbool.h>
 #include <stddef.h>
 
 #include <cairn/debug.h>
 #include <cairn/strings.h>
-
-#ifndef CAIRN_BUFFER_ALLOW_APPEND_INT
-#    define CAIRN_BUFFER_ALLOW_APPEND_INT (0)
-#endif
 
 void
 cairn_buffer_init(struct cairn_buffer *b)
@@ -97,10 +92,6 @@ cairn_buffer_append_int(struct cairn_buffer *b, int d)
     size_t i = 0U;
     unsigned int u;
 
-#if !CAIRN_BUFFER_ALLOW_APPEND_INT
-    CAIRN_ASSERT(false);
-#endif
-
     CAIRN_ASSERT(b != NULL);
 
     if (d < 0)
@@ -110,7 +101,7 @@ cairn_buffer_append_int(struct cairn_buffer *b, int d)
             b->data[b->len] = '-';
             b->len++;
         }
-        u = (unsigned int)-d;
+        u = 0U - (unsigned int)d;
     }
     else
     {

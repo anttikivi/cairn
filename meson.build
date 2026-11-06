@@ -61,7 +61,7 @@ lib = static_library(
     'cairn',
     src,
     include_directories: include,
-    # install: true,
+    install: true,
 )
 dep = declare_dependency(include_directories: include, link_with: lib)
 meson.override_dependency('cairn', dep)
@@ -71,24 +71,13 @@ install_subdir('include/cairn', install_dir: get_option('includedir'))
 import('pkgconfig').generate(lib, name: 'cairn')
 
 if get_option('tests')
-    test_lib = static_library(
-        'cairn_test',
-        src,
-        include_directories: include,
-        c_args: ['-DCAIRN_BUFFER_ALLOW_APPEND_INT=1'],
-    )
-    test_dep = declare_dependency(
-        include_directories: include,
-        link_with: test_lib,
-    )
-
     foreach name : ['buffer', 'strings']
         test(
             name,
             executable(
                 'test_' + name,
                 'test' / (name + '.c'),
-                dependencies: test_dep,
+                dependencies: dep,
             ),
         )
     endforeach

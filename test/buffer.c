@@ -4,6 +4,8 @@
  * SPDX-License-Identifier: LGPL-3.0-or-later
  */
 
+#include <limits.h>
+
 #include <cairn/buffer.h>
 #include <cairn/strings.h>
 #include <cairn/test.h>
@@ -81,6 +83,23 @@ main(void)
         &status, 0,
         cairn_str_ncmp(full, sizeof(full), buf.data, sizeof(buf.data)));
     CAIRN_EXPECT_CHAR_EQ(&status, '\0', buf.data[buf.len]);
+
+    cairn_buffer_init(&buf);
+    cairn_buffer_append_int(&buf, -42);
+
+    CAIRN_EXPECT_SIZE_EQ(&status, 3U, buf.len);
+    CAIRN_EXPECT_INT_EQ(
+        &status, 0,
+        cairn_str_ncmp("-42", sizeof("-42"), buf.data, sizeof(buf.data)));
+
+#if INT_MIN == (-2147483647 - 1)
+    cairn_buffer_init(&buf);
+    cairn_buffer_append_int(&buf, INT_MIN);
+
+    CAIRN_EXPECT_INT_EQ(&status, 0,
+                        cairn_str_ncmp("-2147483648", sizeof("-2147483648"),
+                                       buf.data, sizeof(buf.data)));
+#endif
 
     return cairn_test_result(&status);
 }
