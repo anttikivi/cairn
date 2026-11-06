@@ -33,7 +33,7 @@
 #    endif
 
 static void
-appendd(char *buf, size_t *len, size_t cap, unsigned int d)
+appendd(unsigned int d, char *buf, size_t *len, size_t cap)
 {
     char tmp[16];
     size_t i = 0U;
@@ -80,7 +80,7 @@ cairn_err_assert_failed(const char *expr, const char *file, int line)
     appends(msg, &len, sizeof(msg), " (");
     appends(msg, &len, sizeof(msg), file);
     appends(msg, &len, sizeof(msg), ": ");
-    appendd(msg, &len, sizeof(msg), (unsigned int)line);
+    appendd((unsigned int)line, msg, &len, sizeof(msg));
     appends(msg, &len, sizeof(msg), ")\n");
 
     msg[len] = '\0';
