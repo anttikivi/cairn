@@ -8,6 +8,9 @@ packages:
   - meson
   - muon
 
+environment:
+  CC: gcc
+
 sources:
   - https://git.sr.ht/~anttikivi/cairn
 

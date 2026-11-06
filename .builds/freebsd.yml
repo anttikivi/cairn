@@ -1,0 +1,54 @@
+---
+image: freebsd/latest
+
+packages:
+  - clang
+  - clang-format
+  - clang-tidy
+  - meson
+
+environment:
+  CC: clang
+
+sources:
+  - https://git.sr.ht/~anttikivi/cairn
+
+tasks:
+  - deps: |
+      curl -LsSf https://astral.sh/uv/install.sh | sudo env UV_UNMANAGED_INSTALL="/usr/local/bin" sh
+
+  - build: |
+      cd cairn
+      meson setup build/debug -Dbuildtype=debug
+      meson compile -C build/debug
+
+  - test: |
+      cd cairn
+      meson test -C build/debug --print-errorlogs
+
+  - build_asan_ubsan: |
+      cd cairn
+      meson setup build/debug_asan_ubsan -Dbuildtype=debug -Db_sanitize=address,undefined
+      meson compile -C build/debug_asan_ubsan
+
+  - test_asan_ubsan: |
+      cd cairn
+      meson test -C build/debug_asan_ubsan --print-errorlogs
+
+  - build_memsan: |
+      cd cairn
+      meson setup build/debug_memsan -Dbuildtype=debug -Db_sanitize=memory
+      meson compile -C build/debug_memsan
+
+  - test_memsan: |
+      cd cairn
+      meson test -C build/debug_memsan --print-errorlogs
+
+  - build_release: |
+      cd cairn
+      meson setup build/release -Dbuildtype=release
+      meson compile -C build/release
+
+  - test_release: |
+      cd cairn
+      meson test -C build/release --print-errorlogs
