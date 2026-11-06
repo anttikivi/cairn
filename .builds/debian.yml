@@ -1,0 +1,24 @@
+---
+image: debian/stable
+
+sources:
+  - https://git.sr.ht/~anttikivi/cairn
+
+tasks:
+  - build: |
+      cd cairn
+      meson setup build/debug -Dbuildtype=debug
+      meson compile -C build/debug
+
+  - build_asan_ubsan: |
+      cd cairn
+      meson setup build/debug_asan_ubsan -Dbuildtype=debug -Db_sanitize=address,undefined
+      meson compile -C build/debug_asan_ubsan
+
+  - test: |
+      cd cairn
+      meson test -C build/debug
+
+  - test_asan_ubsan: |
+      cd cairn
+      meson test -C build/debug_asan_ubsan
