@@ -30,7 +30,7 @@ tasks:
 
   - lint: |
       cd cairn
-      meson setup build/lint -Dbuildtype=debug
+      CC=clang meson setup build/lint -Dbuildtype=debug
       ninja -C build/lint clang-format-check
       ninja -C build/lint clang-tidy
       ninja -C build/lint reuse-check
@@ -73,7 +73,7 @@ tasks:
 
   - muon_lint: |
       cd cairn
-      muon setup -Dbuildtype=debug build/muon/lint
+      CC=clang muon setup -Dbuildtype=debug build/muon/lint
       muon -C build/muon/lint samu clang-format-check
       muon -C build/muon/lint samu clang-tidy
       muon -C build/muon/lint samu reuse-check
