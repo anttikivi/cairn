@@ -77,7 +77,7 @@ win32_write_all(DWORD handle_id, const char *s)
         result = CAIRN_ERR_IO_INVALID;
     }
 
-    while ((written < (DWORD)len) && (result == ERR_OK))
+    while ((written < (DWORD)len) && (result == CAIRN_ERR_OK))
     {
         BOOL ok;
         DWORD w;
