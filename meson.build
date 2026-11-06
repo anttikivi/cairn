@@ -126,11 +126,30 @@ if clang_format.found()
     )
 endif
 
+platform_summary = {}
+
 clang_tidy = find_program('clang-tidy', required: false)
 if clang_tidy.found()
+    clang_tidy_env = environment()
+
+    if host_machine.system() == 'darwin' and not meson.is_cross_build()
+        xcrun = find_program('xcrun')
+        sdk_path = run_command(
+            xcrun,
+            '--sdk',
+            'macosx',
+            '--show-sdk-path',
+            check: true,
+        ).stdout().strip()
+
+        platform_summary += {'macOS SDK': sdk_path}
+        clang_tidy_env.set('SDKROOT', sdk_path)
+    endif
+
     run_target(
         'clang-tidy',
         command: [clang_tidy, '-p', meson.project_build_root(), '--quiet'] + c_paths,
+        env: clang_tidy_env,
     )
 endif
 
@@ -161,6 +180,10 @@ if uvx.found()
         ],
     )
     run_target('reuse-check', command: reuse + ['lint'])
+endif
+
+if platform_summary != {}
+    summary(platform_summary, section: 'Platform')
 endif
 
 summary(
