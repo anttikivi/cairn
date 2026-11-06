@@ -14,13 +14,52 @@ packages:
 
 environment:
   CC: gcc
+  GITHUB_KEY: 4b26352f-2d22-413b-821b-e94201815851
   UBSAN_OPTIONS: halt_on_error=1:print_stacktrace=1
+
+secrets:
+  - 4b26352f-2d22-413b-821b-e94201815851
+
+submitter:
+  git.sr.ht:
+    allow-refs:
+      - refs/head/main
 
 sources:
   - https://git.sr.ht/~anttikivi/cairn
   - https://git.sr.ht/~lattis/muon#0.7.1
 
 tasks:
+  - mirror: |
+      if [ "${BUILD_SUBMITTER:-}" != "git.sr.ht" ] || [ "${GIT_REF:-}" != "refs/heads/main" ]; then
+        exit 0
+      fi
+
+      key="${HOME}/.ssh/${GITHUB_KEY}"
+      test -s "${key}"
+
+      install -d -m 700 "${HOME}/.ssh"
+      known_hosts="${HOME}/.ssh/github_known_hosts"
+
+      chmod 600 "${known_hosts}"
+      chmod 600 "${key}"
+
+      # https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/githubs-ssh-key-fingerprints
+      cat > "${known_hosts}" <<'EOF'
+      github.com ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOMqqnkVzrm0SdG6UOoqKLsabgH5C9okWi0dh2l9GKJl
+      EOF
+
+      export GIT_SSH_COMMAND="ssh -F /dev/null \
+        -i \"${key}\" \
+        -o IdentityAgent=none \
+        -o IdentitiesOnly=yes \
+        -o BatchMode=yes \
+        -o StrictHostKeyChecking=yes \
+        -o UserKnownHostsFile=\"${known_hosts}\" \
+        -o HostKeyAlgorithms=ssh-ed25519"
+
+      cd cairn
+      git push git@github.com:anttikivi/cairn.git HEAD:refs/head/main
   - deps: |
       curl -LsSf https://astral.sh/uv/install.sh | sudo env UV_UNMANAGED_INSTALL="/usr/local/bin" sh
       cd muon
