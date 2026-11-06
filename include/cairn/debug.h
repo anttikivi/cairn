@@ -14,7 +14,6 @@
 #endif
 
 #ifndef NDEBUG
-void cairn_err_assert_failed(const char *expr, const char *file, int line);
 #    define CAIRN_ASSERT(condition)                                            \
         do                                                                     \
         {                                                                      \
@@ -26,5 +25,7 @@ void cairn_err_assert_failed(const char *expr, const char *file, int line);
 #else
 #    define CAIRN_ASSERT(condition) ((void)0)
 #endif
+
+void cairn_err_assert_failed(const char *expr, const char *file, int line);
 
 #endif

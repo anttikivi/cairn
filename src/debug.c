@@ -6,31 +6,29 @@
 
 #include <cairn/debug.h>
 
-#ifndef NDEBUG
+#include <stdbool.h>
+#include <stddef.h>
+#include <stdint.h>
+#include <stdlib.h>
 
-#    include <stdbool.h>
-#    include <stddef.h>
-#    include <stdint.h>
-#    include <stdlib.h>
-
-#    ifdef _WIN32
-#        define WIN32_LEAN_AND_MEAN
-#        include <windows.h>
-#    else
-#        include <errno.h>
-#        include <unistd.h>
-#        ifndef CAIRN_ERR_STDERR_FD
-#            define CAIRN_ERR_STDERR_FD (2)
-#        endif
+#ifdef _WIN32
+#    define WIN32_LEAN_AND_MEAN
+#    include <windows.h>
+#else
+#    include <errno.h>
+#    include <unistd.h>
+#    ifndef CAIRN_ERR_STDERR_FD
+#        define CAIRN_ERR_STDERR_FD (2)
 #    endif
+#endif
 
-#    ifndef CAIRN_ASSERT_MSG_MAX_BYTES
-#        define CAIRN_ASSERT_MSG_MAX_BYTES (1024)
-#    endif
+#ifndef CAIRN_ASSERT_MSG_MAX_BYTES
+#    define CAIRN_ASSERT_MSG_MAX_BYTES (1024)
+#endif
 
-#    ifndef CAIRN_ASSERT_MAX_OUTPUT_RETRIES
-#        define CAIRN_ASSERT_MAX_OUTPUT_RETRIES (50U)
-#    endif
+#ifndef CAIRN_ASSERT_MAX_OUTPUT_RETRIES
+#    define CAIRN_ASSERT_MAX_OUTPUT_RETRIES (50U)
+#endif
 
 static void
 appendd(unsigned int d, char *buf, size_t *len, size_t cap)
@@ -85,7 +83,7 @@ cairn_err_assert_failed(const char *expr, const char *file, int line)
 
     msg[len] = '\0';
 
-#    ifdef _WIN32
+#ifdef _WIN32
     {
         HANDLE handle = GetStdHandle(STD_ERROR_HANDLE);
         DWORD written = 0U;
@@ -113,7 +111,7 @@ cairn_err_assert_failed(const char *expr, const char *file, int line)
             }
         }
     }
-#    else
+#else
     {
         size_t written = 0U;
         uint8_t retries = 0U;
@@ -146,17 +144,15 @@ cairn_err_assert_failed(const char *expr, const char *file, int line)
             }
         }
     }
-#    endif
+#endif
 
-#    if defined(__GNUC__) || defined(__clang__)
+#if defined(__GNUC__) || defined(__clang__)
     __builtin_trap();
-#    elif defined(_MSC_VER)
+#elif defined(_MSC_VER)
     __debugbreak();
-#    else
+#else
     *(volatile int *)0 = 0;
-#    endif
+#endif
 
     abort();
 }
-
-#endif
