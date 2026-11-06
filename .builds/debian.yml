@@ -26,10 +26,14 @@ sources:
 
 tasks:
   - mirror: |
-      if [ "${BUILD_SUBMITTER:-}" != "git.sr.ht" ] || [ "${GIT_REF:-}" != "refs/heads/main" ]; then
-        printf 'Mirroring only the main branch\n'
+      if [ "${BUILD_SUBMITTER:-}" != "git.sr.ht" ]; then
         exit 0
       fi
+
+      case "${GIT_REF:-}" in
+        refs/heads/*|refs/tags/*) ;;
+        *) exit 0 ;;
+      esac
 
       key="${HOME}/.ssh/${GITHUB_KEY}"
       test -s "${key}"
@@ -55,7 +59,16 @@ tasks:
         -o HostKeyAlgorithms=ssh-ed25519"
 
       cd cairn
-      git push git@github.com:anttikivi/cairn.git HEAD:refs/heads/main
+
+      case "${GIT_REF}" in
+        refs/heads/*)
+          git push git@github.com:anttikivi/cairn.git "HEAD:${GIT_REF}"
+          ;;
+        refs/tags/*)
+          git fetch --no-tags origin "${GIT_REF}:${GIT_REF}"
+          git push git@github.com:anttikivi/cairn.git "${GIT_REF}:${GIT_REF}"
+          ;;
+      esac
   - deps: |
       curl -LsSf https://astral.sh/uv/install.sh | sudo env UV_UNMANAGED_INSTALL="/usr/local/bin" sh
       cd muon
