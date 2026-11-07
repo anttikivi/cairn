@@ -162,22 +162,34 @@ else
     tools_summary += {'clang-tidy': clang_tidy.found()}
 endif
 
-cppcheck_paths = fmt_paths
-
 cppcheck = find_program('cppcheck', required: false)
 if cppcheck.found()
     tools_summary += {'cppcheck': cppcheck}
 
+    cppcheck_args = [
+        '--project=' + (
+            meson.project_build_root() / 'compile_commands.json'
+        ),
+        '--std=c99',
+        '--enable=all',
+        '--inconclusive',
+        '--check-level=exhaustive',
+        '--addon=misra',
+        '--checkers-report=' + (
+            meson.project_build_root() / 'cppcheck-checkers.txt'
+        ),
+    ]
+
+    # TODO: Add more granular checking of the libraries in use.
+    if host_machine.system() == 'windows'
+        cppcheck_args += ['--library=windows']
+    else
+        cppcheck_args += ['--library=posix']
+    endif
+
     run_target(
         'cppcheck',
-        command: [
-            cppcheck,
-            '--project=' + (
-                meson.project_build_root() / 'compile_commands.json'
-            ),
-            '--enable=warning,style,performance,portability,information',
-            '--addon=misra',
-        ],
+        command: [cppcheck] + cppcheck_args,
     )
 else
     tools_summary += {'cppcheck': cppcheck.found()}
