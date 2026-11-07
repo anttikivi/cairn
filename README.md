@@ -75,10 +75,11 @@ muon -C build/debug test
 ### Development Tools
 
 For linting and formatting, `cairn` uses
-[`clang-tidy`](https://clang.llvm.org/extra/clang-tidy/) and
-[`clang-format`](https://clang.llvm.org/docs/ClangFormat.html) respectively.
-Additionally, the project is [REUSE-compliant](https://reuse.software/) and uses
-the [REUSE tool](https://reuse.readthedocs.io/en/stable/index.html) to add the
+[`clang-tidy`](https://clang.llvm.org/extra/clang-tidy/),
+[`clang-format`](https://clang.llvm.org/docs/ClangFormat.html), and
+[Cppcheck](https://cppcheck.sourceforge.io/). Additionally, the project is
+[REUSE-compliant](https://reuse.software/) and uses the
+[REUSE tool](https://reuse.readthedocs.io/en/stable/index.html) to add the
 appropriate license headers and check for compliance. For the moment, the REUSE
 tool is run via [`uvx`](https://docs.astral.sh/uv/).
 
@@ -90,6 +91,7 @@ Ninja:
 ninja -C build/debug clang-format
 ninja -C build/debug clang-format-check
 ninja -C build/debug clang-tidy
+ninja -C build/debug cppcheck
 ninja -C build/debug reuse-annotate
 ninja -C build/debug reuse-check
 ```
@@ -100,6 +102,7 @@ samurai:
 muon -C build/debug samu clang-format
 muon -C build/debug samu clang-format-check
 muon -C build/debug samu clang-tidy
+muon -C build/debug samu cppcheck
 muon -C build/debug samu reuse-annotate
 muon -C build/debug samu reuse-check
 ```
