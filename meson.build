@@ -117,19 +117,26 @@ foreach path : header_paths
     fmt_paths += root / path
 endforeach
 
+tools_summary = {}
+
 clang_format = find_program('clang-format', required: false)
 if clang_format.found()
+    tools_summary += {'clang-format': clang_format}
+
     run_target('clang-format', command: [clang_format, '-i'] + fmt_paths)
     run_target(
         'clang-format-check',
         command: [clang_format, '--dry-run', '--Werror'] + fmt_paths,
     )
+else
+    tools_summary += {'clang-format': clang_format.found()}
 endif
 
 platform_summary = {}
 
 clang_tidy = find_program('clang-tidy', required: false)
 if clang_tidy.found()
+    tools_summary += {'clang-tidy': clang_tidy}
     clang_tidy_env = environment()
 
     if host_machine.system() == 'darwin' and not meson.is_cross_build()
@@ -151,10 +158,35 @@ if clang_tidy.found()
         command: [clang_tidy, '-p', meson.project_build_root(), '--quiet'] + c_paths,
         env: clang_tidy_env,
     )
+else
+    tools_summary += {'clang-tidy': clang_tidy.found()}
+endif
+
+cppcheck_paths = fmt_paths
+
+cppcheck = find_program('cppcheck', required: false)
+if cppcheck.found()
+    tools_summary += {'cppcheck': cppcheck}
+
+    run_target(
+        'cppcheck',
+        command: [
+            cppcheck,
+            '--project=' + (
+                meson.project_build_root() / 'compile_commands.json'
+            ),
+            '--enable=warning,style,performance,portability,information',
+            '--addon=misra',
+        ],
+    )
+else
+    tools_summary += {'cppcheck': cppcheck.found()}
 endif
 
 uvx = find_program('uvx', required: false)
 if uvx.found()
+    tools_summary += {'uvx': uvx}
+
     reuse = [uvx, '--from=reuse[charset-normalizer]', 'reuse', '--root', root]
 
     escapes_at = '\\@'.format() == '@'
@@ -182,6 +214,8 @@ if uvx.found()
         ],
     )
     run_target('reuse-check', command: reuse + ['lint'])
+else
+    tools_summary += {'uvx': uvx.found()}
 endif
 
 if platform_summary != {}
@@ -189,10 +223,6 @@ if platform_summary != {}
 endif
 
 summary(
-    {
-        'clang-format': clang_format.found(),
-        'clang-tidy': clang_tidy.found(),
-        'uvx': uvx.found(),
-    },
+    tools_summary,
     section: 'Developer tools',
 )
