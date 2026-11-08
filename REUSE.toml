@@ -9,7 +9,9 @@ path = [
   ".clangd",
   ".editorconfig",
   "build/",
+  "tools/misra.json.in",
   "README.md",
+  "THIRD_PARTY_NOTICES",
 ]
 SPDX-FileCopyrightText = "© 2026 Antti Kivi <antti@anttikivi.com>"
 SPDX-License-Identifier = "LGPL-3.0-or-later"

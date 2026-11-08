@@ -113,3 +113,12 @@ muon -C build/debug samu reuse-check
 
 `cairn` is licensed under the
 [GNU Lesser General Public License v3.0 or later](https://www.gnu.org/licenses/lgpl-3.0.html).
+
+### Third-party Components
+
+`tools/misra-c-2012.txt` contains the MISRA C:2012 guideline headlines for
+Cppcheck
+[provided by the MISRA Consortium Limited](https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/tools/).
+It is licensed under the
+[Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International](https://creativecommons.org/licenses/by-nc-nd/4.0/)
+license. See `LICENSES/CC-BY-NC-ND-4.0.txt` for more information.

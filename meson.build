@@ -166,6 +166,17 @@ cppcheck = find_program('cppcheck', required: false)
 if cppcheck.found()
     tools_summary += {'cppcheck': cppcheck}
 
+    misra_config = configuration_data()
+    misra_config.set(
+        'RULE_TEXTS',
+        (root / 'tools' / 'misra-c-2012.txt').replace('\\', '/'),
+    )
+    configure_file(
+        input: root / 'tools' / 'misra.json.in',
+        output: 'misra.json',
+        configuration: misra_config,
+    )
+
     cppcheck_args = [
         '--project=' + (
             meson.project_build_root() / 'compile_commands.json'
@@ -174,7 +185,7 @@ if cppcheck.found()
         '--enable=all',
         '--inconclusive',
         '--check-level=exhaustive',
-        '--addon=misra',
+        '--addon=' + (meson.current_build_dir() / 'misra.json'),
         '--checkers-report=' + (
             meson.project_build_root() / 'cppcheck-checkers.txt'
         ),

@@ -1,0 +1,3 @@
+The file `tools/misra-c-2012.txt` contains the MISRA C:2012 guideline headlines for Cppcheck provided by the MISRA Consortium Limited: https://gitlab.com/MISRA/MISRA-C/MISRA-C-2012/tools/.
+Included revision: 73090ff370020fc577359e18817ecbb0a6a335de.
+It is licensed under the Creative Commons Attribution-NonCommercial-NoDerivatives 4.0 International. See `LICENSES/CC-BY-NC-ND-4.0.txt` or https://creativecommons.org/licenses/by-nc-nd/4.0/ for more information.
