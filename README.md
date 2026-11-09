@@ -12,7 +12,7 @@ projects that follow the MISRA C guidelines.
 
 ### Prerequisites
 
-- C99-compatible compiler toolchain
+- C compiler toolchain
 - [Meson](https://mesonbuild.com/) or [muon](https://muon.build/)
 - A compatible build backend like Ninja or muon's built-in samurai
 

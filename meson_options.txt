@@ -2,4 +2,22 @@
 #
 # SPDX-License-Identifier: LGPL-3.0-or-later
 
+option(
+    'int64',
+    type: 'feature',
+    value: 'auto',
+    description: 'Enable library support for at least 64-bit integer types',
+)
+option(
+    'stdbool',
+    type: 'feature',
+    value: 'auto',
+    description: 'Use boolean type defined by stdbool.h',
+)
+option(
+    'stdint',
+    type: 'feature',
+    value: 'auto',
+    description: 'Use exact-width integer types from stdint.h',
+)
 option('tests', type: 'boolean', value: true, description: 'Build the tests')

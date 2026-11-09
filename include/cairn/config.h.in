@@ -1,0 +1,49 @@
+/*
+ * SPDX-FileCopyrightText: (C) 2026 Antti Kivi <antti@anttikivi.com>
+ *
+ * SPDX-License-Identifier: LGPL-3.0-or-later
+ */
+
+#ifndef CAIRN_CONFIG_H
+#define CAIRN_CONFIG_H
+
+#mesondefine CAIRN_USE_STDINT
+#mesondefine CAIRN_USE_STDBOOL
+#mesondefine CAIRN_USE_INT64
+
+#mesondefine CAIRN_I8_TYPE
+#mesondefine CAIRN_I8_TYPE_MAX
+#mesondefine CAIRN_I8_TYPE_MIN
+
+#mesondefine CAIRN_U8_TYPE
+#mesondefine CAIRN_U8_TYPE_MAX
+
+#mesondefine CAIRN_I16_TYPE
+#mesondefine CAIRN_I16_TYPE_MAX
+#mesondefine CAIRN_I16_TYPE_MIN
+
+#mesondefine CAIRN_U16_TYPE
+#mesondefine CAIRN_U16_TYPE_MAX
+
+#mesondefine CAIRN_I32_TYPE
+#mesondefine CAIRN_I32_TYPE_MAX
+#mesondefine CAIRN_I32_TYPE_MIN
+
+#mesondefine CAIRN_U32_TYPE
+#mesondefine CAIRN_U32_TYPE_MAX
+
+#mesondefine CAIRN_I64_TYPE
+#mesondefine CAIRN_I64_TYPE_MAX
+#mesondefine CAIRN_I64_TYPE_MIN
+
+#mesondefine CAIRN_U64_TYPE
+#mesondefine CAIRN_U64_TYPE_MAX
+
+#mesondefine CAIRN_LEAST_I64_TYPE
+#mesondefine CAIRN_LEAST_I64_TYPE_MAX
+#mesondefine CAIRN_LEAST_I64_TYPE_MIN
+
+#mesondefine CAIRN_LEAST_U64_TYPE
+#mesondefine CAIRN_LEAST_U64_TYPE_MAX
+
+#endif
