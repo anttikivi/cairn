@@ -59,6 +59,48 @@ endif
 
 add_project_arguments(project_arguments, language: 'c')
 
+check_arguments = project_arguments
+
+warning_level = get_option('warning_level')
+werror = get_option('werror')
+
+if cc.get_argument_syntax() == 'msvc'
+    if warning_level == '1'
+        check_arguments += cc.get_supported_arguments('/W2')
+    elif warning_level == '2'
+        check_arguments += cc.get_supported_arguments('/W3')
+    elif warning_level == '3'
+        check_arguments += cc.get_supported_arguments('/W4')
+    elif warning_level == 'everything'
+        check_arguments += cc.get_supported_arguments('/Wall')
+    endif
+    if werror
+        check_arguments += cc.get_supported_arguments('/WX')
+    endif
+else
+    if warning_level == '1'
+        check_arguments += cc.get_supported_arguments('-Wall')
+    elif warning_level == '2'
+        check_arguments += cc.get_supported_arguments('-Wall', '-Wextra')
+    elif warning_level == '3'
+        check_arguments += cc.get_supported_arguments(
+            '-Wall',
+            '-Wextra',
+            '-Wpedantic',
+        )
+    elif warning_level == 'everything'
+        check_arguments += cc.get_supported_arguments(
+            '-Wall',
+            '-Wextra',
+            '-Wpedantic',
+            '-Weverything',
+        )
+    endif
+    if werror
+        check_arguments += cc.get_supported_arguments('-Werror')
+    endif
+endif
+
 # Check by compilation instead of checking the C standard variable to account
 # for GNU etc.
 c99_or_later = cc.compiles(
@@ -74,7 +116,7 @@ int main(void)
     return 0;
 }
   ''',
-    args: project_arguments,
+    args: check_arguments,
     name: 'selected C standard is C99 or later',
 )
 
@@ -115,7 +157,7 @@ int main(void)
     return 0;
 }
     ''',
-        args: project_arguments,
+        args: check_arguments,
         name: 'least-width integer types from stdint.h',
     )
     if not have_stdint
@@ -141,7 +183,7 @@ int main(void)
     return 0;
 }
     ''',
-            args: project_arguments,
+            args: check_arguments,
             name: '64-bit least-width integer types from stdint.h',
         )
     endif
@@ -173,7 +215,7 @@ int main(void)
     return 0;
 }
         ''',
-        args: project_arguments,
+        args: check_arguments,
         name: 'long long types and limits',
     )
     if have_long_long
@@ -220,7 +262,7 @@ int main(void)
     return 0;
 }
 '''.format(range_check, candidate[1]),
-                    args: project_arguments,
+                    args: check_arguments,
                     name: 'at least 64-bit @0@'.format(candidate[1]),
                 )
 
@@ -295,7 +337,7 @@ int main(void)
     return 0;
 }
 '''.format(range_check, candidate[1], width[0]),
-                    args: project_arguments,
+                    args: check_arguments,
                     name: 'exactly @0@-bit @1@'.format(
                         width[0],
                         candidate[1],
@@ -333,7 +375,7 @@ int main(void)
     return b == false;
 }
     ''',
-        args: project_arguments,
+        args: check_arguments,
         name: 'stdbool.h support',
     )
     if not have_stdbool
@@ -354,7 +396,7 @@ int main(void)
     return b ? 1 : 0;
 }
         ''',
-        args: project_arguments,
+        args: check_arguments,
         name: 'builtin _Bool type support',
     )
     if have_builtin_bool
