@@ -7,6 +7,8 @@
 #ifndef CAIRN_DEBUG_H
 #define CAIRN_DEBUG_H
 
+#include <cairn/bool.h>
+
 #ifndef NDEBUG
 #    define CAIRN_ASSERT(condition)                                            \
         do                                                                     \
@@ -15,7 +17,7 @@
             {                                                                  \
                 cairn_err_assert_failed(#condition, __FILE__, __LINE__);       \
             }                                                                  \
-        } while (0 != 0)
+        } while (CAIRN_FALSE)
 #else
 #    define CAIRN_ASSERT(condition) ((void)0)
 #endif
