@@ -554,6 +554,7 @@ if cppcheck.found()
         '--suppress=missingIncludeSystem',
         '--inconclusive',
         '--check-level=exhaustive',
+        '--error-exitcode=1',
         '--addon=' + (meson.current_build_dir() / 'misra.json'),
         '--checkers-report=' + (
             meson.project_build_root() / 'cppcheck-checkers.txt'
