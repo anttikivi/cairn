@@ -1,3 +1,9 @@
+/*
+ * SPDX-FileCopyrightText: (C) 2026 Antti Kivi <antti@anttikivi.com>
+ *
+ * SPDX-License-Identifier: LGPL-3.0-or-later
+ */
+
 #ifndef CAIRN_INT_H
 #define CAIRN_INT_H
 
