@@ -358,7 +358,6 @@ src_paths = [
     'src/buffer.c',
     'src/debug.c',
     'src/io.c',
-    'src/semver.c',
     'src/strings.c',
     'src/test.c',
 ]
@@ -368,7 +367,6 @@ header_paths = [
     'include/cairn/error.h',
     'include/cairn/int.h',
     'include/cairn/io.h',
-    'include/cairn/semver.h',
     'include/cairn/strings.h',
     'include/cairn/test.h',
     'include/cairn/units.h',
