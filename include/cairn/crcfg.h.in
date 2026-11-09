@@ -1,0 +1,53 @@
+/*
+ * SPDX-FileCopyrightText: (C) 2026 Antti Kivi <antti@anttikivi.com>
+ *
+ * SPDX-License-Identifier: LGPL-3.0-or-later
+ */
+
+#ifndef CR_CONFIG_H
+#define CR_CONFIG_H
+
+#mesondefine CR_BREAKPOINTS
+
+#mesondefine CR_USE_STDINT
+#mesondefine CR_USE_STDBOOL
+#mesondefine CR_USE_INT64
+
+#mesondefine CR_BOOL_TYPE
+
+#mesondefine CR_I8_TYPE
+#mesondefine CR_I8_TYPE_MAX
+#mesondefine CR_I8_TYPE_MIN
+
+#mesondefine CR_U8_TYPE
+#mesondefine CR_U8_TYPE_MAX
+
+#mesondefine CR_I16_TYPE
+#mesondefine CR_I16_TYPE_MAX
+#mesondefine CR_I16_TYPE_MIN
+
+#mesondefine CR_U16_TYPE
+#mesondefine CR_U16_TYPE_MAX
+
+#mesondefine CR_I32_TYPE
+#mesondefine CR_I32_TYPE_MAX
+#mesondefine CR_I32_TYPE_MIN
+
+#mesondefine CR_U32_TYPE
+#mesondefine CR_U32_TYPE_MAX
+
+#mesondefine CR_I64_TYPE
+#mesondefine CR_I64_TYPE_MAX
+#mesondefine CR_I64_TYPE_MIN
+
+#mesondefine CR_U64_TYPE
+#mesondefine CR_U64_TYPE_MAX
+
+#mesondefine CR_LEAST_I64_TYPE
+#mesondefine CR_LEAST_I64_TYPE_MAX
+#mesondefine CR_LEAST_I64_TYPE_MIN
+
+#mesondefine CR_LEAST_U64_TYPE
+#mesondefine CR_LEAST_U64_TYPE_MAX
+
+#endif

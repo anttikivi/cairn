@@ -267,7 +267,7 @@ int main(void)
                 )
 
                 if int_supported
-                    prefix = 'CAIRN_LEAST_@0@64_TYPE'.format(signedness)
+                    prefix = 'CR_LEAST_@0@64_TYPE'.format(signedness)
 
                     cfg.set(prefix, candidate[1])
                     cfg.set(prefix + '_MAX', candidate[3])
@@ -345,7 +345,7 @@ int main(void)
                 )
 
                 if int_supported
-                    prefix = 'CAIRN_@0@@1@_TYPE'.format(
+                    prefix = 'CR_@0@@1@_TYPE'.format(
                         signedness,
                         width[0],
                     )
@@ -406,10 +406,11 @@ int main(void)
     endif
 endif
 
-cfg.set('CAIRN_BOOL_TYPE', bool_type)
-cfg.set10('CAIRN_USE_STDINT', use_stdint)
-cfg.set10('CAIRN_USE_STDBOOL', use_stdbool)
-cfg.set10('CAIRN_USE_INT64', use_int64)
+cfg.set('CR_BOOL_TYPE', bool_type)
+cfg.set10('CR_BREAKPOINTS', get_option('breakpoints'))
+cfg.set10('CR_USE_STDINT', use_stdint)
+cfg.set10('CR_USE_STDBOOL', use_stdbool)
+cfg.set10('CR_USE_INT64', use_int64)
 
 subdir('include' / 'cairn')
 
@@ -423,17 +424,17 @@ cfg_summary = {
 
 src_paths = [
     'src/buffer.c',
-    'src/debug.c',
+    'src/crdbg.c',
     'src/io.c',
     'src/strings.c',
     'src/test.c',
 ]
 header_paths = [
-    'include/cairn/bool.h',
     'include/cairn/buffer.h',
-    'include/cairn/debug.h',
+    'include/cairn/crdbg.h',
+    'include/cairn/crbool.h',
+    'include/cairn/crint.h',
     'include/cairn/error.h',
-    'include/cairn/int.h',
     'include/cairn/io.h',
     'include/cairn/strings.h',
     'include/cairn/test.h',
@@ -552,9 +553,11 @@ if cppcheck.found()
         '--std=' + get_option('c_std'),
         '--enable=all',
         '--suppress=missingIncludeSystem',
+        '--inline-suppr',
         '--inconclusive',
         '--check-level=exhaustive',
         '--error-exitcode=1',
+        '--library=' + (root / 'tools' / 'cppcheck-library.xml'),
         '--addon=' + (meson.current_build_dir() / 'misra.json'),
         '--checkers-report=' + (
             meson.project_build_root() / 'cppcheck-checkers.txt'

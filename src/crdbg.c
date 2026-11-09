@@ -4,37 +4,49 @@
  * SPDX-License-Identifier: LGPL-3.0-or-later
  */
 
-#include <cairn/debug.h>
+#include <cairn/crdbg.h>
 
+#include <limits.h>
 #include <stddef.h>
-#include <stdint.h>
 #include <stdlib.h>
 
-#include <cairn/bool.h>
+#include <cairn/crbool.h>
 
 #ifdef _WIN32
 #    define WIN32_LEAN_AND_MEAN
 #    include <windows.h>
 #else
+#    include <cairn/crint.h>
 #    include <errno.h>
 #    include <unistd.h>
-#    ifndef CAIRN_ERR_STDERR_FD
-#        define CAIRN_ERR_STDERR_FD (2)
+#    ifndef CR_ERR_STDERR_FD
+#        define CR_ERR_STDERR_FD (2)
 #    endif
 #endif
 
-#ifndef CAIRN_ASSERT_MSG_MAX_BYTES
-#    define CAIRN_ASSERT_MSG_MAX_BYTES (1024)
+#ifndef CR_ASSERT_MSG_MAX_BYTES
+#    define CR_ASSERT_MSG_MAX_BYTES (1024)
 #endif
 
-#ifndef CAIRN_ASSERT_MAX_OUTPUT_RETRIES
-#    define CAIRN_ASSERT_MAX_OUTPUT_RETRIES (50U)
+#if CR_ASSERT_MSG_MAX_BYTES < 1
+#    error "maximum size for assert message cannot be less than one byte"
+#endif
+
+#ifndef CR_ASSERT_MAX_OUTPUT_RETRIES
+#    define CR_ASSERT_MAX_OUTPUT_RETRIES (50U)
+#endif
+
+#ifndef _WIN32
+#    if (CR_ASSERT_MAX_OUTPUT_RETRIES < 1) ||                                  \
+        (CR_ASSERT_MAX_OUTPUT_RETRIES > CR_LEAST_U8_MAX)
+#        error "assert output retry limit is outside the range"
+#    endif
 #endif
 
 static void
 appendd(unsigned int d, char *buf, size_t *len, size_t cap)
 {
-    char tmp[16];
+    char tmp[sizeof(unsigned int) * (size_t)CHAR_BIT];
     size_t i = 0U;
     unsigned int u = d;
 
@@ -56,9 +68,9 @@ appendd(unsigned int d, char *buf, size_t *len, size_t cap)
 static void
 appends(char *buf, size_t *len, size_t cap, const char *s)
 {
-    size_t i = 0U;
     if (s != NULL)
     {
+        size_t i = 0U;
         while ((s[i] != '\0') && (*len < (cap - 1U)))
         {
             buf[*len] = s[i];
@@ -69,9 +81,9 @@ appends(char *buf, size_t *len, size_t cap, const char *s)
 }
 
 void
-cairn_err_assert_failed(const char *expr, const char *file, int line)
+crdlog(const char *expr, const char *file, int line)
 {
-    char msg[CAIRN_ASSERT_MSG_MAX_BYTES];
+    char msg[CR_ASSERT_MSG_MAX_BYTES];
     size_t len = 0U;
 
     appends(msg, &len, sizeof(msg), "Assertion failed: ");
@@ -90,7 +102,7 @@ cairn_err_assert_failed(const char *expr, const char *file, int line)
         DWORD written = 0U;
         if ((handle != NULL) && (handle != INVALID_HANDLE_VALUE))
         {
-            cairn_bool end = CAIRN_FALSE;
+            crbool end = CR_FALSE;
             while ((written < (DWORD)len) && !end)
             {
                 BOOL ok;
@@ -103,7 +115,7 @@ cairn_err_assert_failed(const char *expr, const char *file, int line)
 
                 if ((ok == FALSE) || (w == 0U))
                 {
-                    end = CAIRN_TRUE;
+                    end = CR_TRUE;
                 }
                 else
                 {
@@ -115,27 +127,31 @@ cairn_err_assert_failed(const char *expr, const char *file, int line)
 #else
     {
         size_t written = 0U;
-        uint8_t retries = 0U;
-        cairn_bool end = CAIRN_FALSE;
+        cr_least_u8 retries = 0U;
+        crbool end = CR_FALSE;
         while ((written < len) && !end)
         {
             ssize_t ret = 0;
             errno = 0;
-            ret = write(CAIRN_ERR_STDERR_FD, &msg[written], len - written);
+            ret = write(CR_ERR_STDERR_FD, &msg[written], len - written);
             if (ret <= 0)
             {
+                /* POSIX write is an errno-setting function. */
+                /* cppcheck-suppress-begin [misra-config, misra-c2012-22.10] */
                 if ((errno == EINTR) || (errno == EAGAIN) ||
                     (errno == EWOULDBLOCK))
                 {
+                    /* cppcheck-suppress-end [misra-config, misra-c2012-22.10]
+                     */
                     retries++;
-                    if (retries >= CAIRN_ASSERT_MAX_OUTPUT_RETRIES)
+                    if (retries >= CR_ASSERT_MAX_OUTPUT_RETRIES)
                     {
-                        end = CAIRN_TRUE;
+                        end = CR_TRUE;
                     }
                 }
                 else
                 {
-                    end = CAIRN_TRUE;
+                    end = CR_TRUE;
                 }
             }
             else
@@ -146,14 +162,28 @@ cairn_err_assert_failed(const char *expr, const char *file, int line)
         }
     }
 #endif
+}
 
-#if defined(__GNUC__) || defined(__clang__)
-    __builtin_trap();
-#elif defined(_MSC_VER)
-    __debugbreak();
-#else
-    *(volatile int *)0 = 0;
+void
+crdbreak(void)
+{
+#if CR_BREAKPOINTS
+#    if defined(__clang__)
+    __builtin_debugtrap();
+#    elif defined(_MSC_VER)
+    DebugBreak();
+#    endif
 #endif
+}
 
+void
+crdterm(void)
+{
+#if defined(__clang__) || defined(__GNUC__)
+    __builtin_trap();
+#else
+    /* Deviation-001 */
+    /* cppcheck-suppress misra-c2012-21.8 */
     abort();
+#endif
 }

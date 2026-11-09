@@ -3,6 +3,12 @@
 # SPDX-License-Identifier: LGPL-3.0-or-later
 
 option(
+    'breakpoints',
+    type: 'boolean',
+    value: false,
+    description: 'Enable debug breakpoints',
+)
+option(
     'int64',
     type: 'feature',
     value: 'auto',
