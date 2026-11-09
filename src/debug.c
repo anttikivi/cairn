@@ -6,10 +6,11 @@
 
 #include <cairn/debug.h>
 
-#include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
 #include <stdlib.h>
+
+#include <cairn/bool.h>
 
 #ifdef _WIN32
 #    define WIN32_LEAN_AND_MEAN
@@ -89,7 +90,7 @@ cairn_err_assert_failed(const char *expr, const char *file, int line)
         DWORD written = 0U;
         if ((handle != NULL) && (handle != INVALID_HANDLE_VALUE))
         {
-            bool end = false;
+            cairn_bool end = CAIRN_FALSE;
             while ((written < (DWORD)len) && !end)
             {
                 BOOL ok;
@@ -102,7 +103,7 @@ cairn_err_assert_failed(const char *expr, const char *file, int line)
 
                 if ((ok == FALSE) || (w == 0U))
                 {
-                    end = true;
+                    end = CAIRN_TRUE;
                 }
                 else
                 {
@@ -115,7 +116,7 @@ cairn_err_assert_failed(const char *expr, const char *file, int line)
     {
         size_t written = 0U;
         uint8_t retries = 0U;
-        bool end = false;
+        cairn_bool end = CAIRN_FALSE;
         while ((written < len) && !end)
         {
             ssize_t ret = 0;
@@ -129,12 +130,12 @@ cairn_err_assert_failed(const char *expr, const char *file, int line)
                     retries++;
                     if (retries >= CAIRN_ASSERT_MAX_OUTPUT_RETRIES)
                     {
-                        end = true;
+                        end = CAIRN_TRUE;
                     }
                 }
                 else
                 {
-                    end = true;
+                    end = CAIRN_TRUE;
                 }
             }
             else

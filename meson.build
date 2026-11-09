@@ -341,6 +341,30 @@ int main(void)
     endif
 endif
 
+if use_stdbool
+    bool_type = 'bool'
+else
+    have_builtin_bool = cc.compiles(
+        '''
+typedef _Bool probe_bool;
+
+int main(void)
+{
+    probe_bool b = (0 != 0);
+    return b ? 1 : 0;
+}
+        ''',
+        args: project_arguments,
+        name: 'builtin _Bool type support',
+    )
+    if have_builtin_bool
+        bool_type = '_Bool'
+    else
+        bool_type = 'unsigned char'
+    endif
+endif
+
+cfg.set('CAIRN_BOOL_TYPE', bool_type)
 cfg.set10('CAIRN_USE_STDINT', use_stdint)
 cfg.set10('CAIRN_USE_STDBOOL', use_stdbool)
 cfg.set10('CAIRN_USE_INT64', use_int64)
@@ -352,6 +376,7 @@ cfg_summary = {
     'stdint.h': use_stdint,
     'stdbool.h': use_stdbool,
     '64-bit ints': use_int64,
+    'boolean type': bool_type,
 }
 
 src_paths = [
@@ -362,6 +387,7 @@ src_paths = [
     'src/test.c',
 ]
 header_paths = [
+    'include/cairn/bool.h',
     'include/cairn/buffer.h',
     'include/cairn/debug.h',
     'include/cairn/error.h',

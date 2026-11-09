@@ -11,6 +11,8 @@
 #mesondefine CAIRN_USE_STDBOOL
 #mesondefine CAIRN_USE_INT64
 
+#mesondefine CAIRN_BOOL_TYPE
+
 #mesondefine CAIRN_I8_TYPE
 #mesondefine CAIRN_I8_TYPE_MAX
 #mesondefine CAIRN_I8_TYPE_MIN
