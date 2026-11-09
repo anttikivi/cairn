@@ -509,7 +509,7 @@ if clang_tidy.found()
 
     if host_machine.system() == 'darwin' and not meson.is_cross_build()
         xcrun = find_program('xcrun')
-        sdk_path = run_command(
+        macosx_sdk_path = run_command(
             xcrun,
             '--sdk',
             'macosx',
@@ -517,8 +517,8 @@ if clang_tidy.found()
             check: true,
         ).stdout().strip()
 
-        platform_summary += {'macOS SDK': sdk_path}
-        clang_tidy_env.set('SDKROOT', sdk_path)
+        platform_summary += {'macOS SDK': macosx_sdk_path}
+        clang_tidy_env.set('SDKROOT', macosx_sdk_path)
     endif
 
     run_target(
@@ -551,6 +551,7 @@ if cppcheck.found()
         ),
         '--std=' + get_option('c_std'),
         '--enable=all',
+        '--suppress=missingIncludeSystem',
         '--inconclusive',
         '--check-level=exhaustive',
         '--addon=' + (meson.current_build_dir() / 'misra.json'),
