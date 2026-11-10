@@ -547,6 +547,14 @@ platform_summary = {}
 clang_tidy = find_program('clang-tidy', required: false)
 if clang_tidy.found()
     tools_summary += {'clang-tidy': clang_tidy}
+
+    clang_tidy_args = ['-p', meson.project_build_root(), '--quiet']
+    if cc.get_argument_syntax() == 'msvc'
+        clang_tidy_args += [
+            '--extra-arg=-Wno-unused-command-line-argument',
+        ]
+    endif
+
     clang_tidy_env = environment()
 
     if host_machine.system() == 'darwin' and not meson.is_cross_build()
@@ -565,7 +573,7 @@ if clang_tidy.found()
 
     run_target(
         'clang-tidy',
-        command: [clang_tidy, '-p', meson.project_build_root(), '--quiet'] + c_paths,
+        command: [clang_tidy] + clang_tidy_args + c_paths,
         env: clang_tidy_env,
     )
 else
