@@ -61,7 +61,9 @@ jobs:
       - uses: ilammy/msvc-dev-cmd@v1.13.0
         if: runner.os == 'Windows'
       - run: python -m pip install meson ninja
-      - run: brew install cppcheck
+      - run: |
+          brew install cppcheck llvm
+          echo "$(brew --prefix llvm)/bin" >> "${GITHUB_PATH}"
         if: runner.os == 'macOS'
       - run: |
           sudo apt-get update
