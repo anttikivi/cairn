@@ -92,7 +92,7 @@ test_crsncmp(void)
 }
 
 int
-main(void)
+main(void) /* cppcheck-suppress misra-c2012-8.6 */
 {
     int result = test_crsnlen();
 

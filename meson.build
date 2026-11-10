@@ -439,7 +439,7 @@ header_paths = [
 testlib_src_paths = ['src/crtest.c']
 testlib_header_paths = ['include/crtest.h']
 
-test_names = ['buf', 'str']
+test_names = ['buf', 'io', 'str']
 test_paths = []
 foreach name : test_names
     test_paths += 'test' / (name + '.c')
@@ -497,6 +497,9 @@ endif
 
 if build_tests
     foreach name : test_names
+        if name == 'io'
+            continue
+        endif
         test(
             name,
             executable(
@@ -506,6 +509,14 @@ if build_tests
             ),
         )
     endforeach
+
+    python = import('python').find_installation()
+    io_test = executable(
+        'test_io',
+        'test' / 'io.c',
+        dependencies: dep,
+    )
+    test('io', python, args: files('test' / 'io.py') + [io_test], timeout: 60)
 endif
 
 root = meson.project_source_root()
@@ -614,6 +625,9 @@ if cppcheck.found()
         '--error-exitcode=1',
         '--library=' + (root / 'tools' / 'cppcheck-library.xml'),
         '--addon=' + (meson.current_build_dir() / 'misra.json'),
+        '--checkers-report=' + (
+            meson.project_build_root() / 'cppcheck-checkers.txt'
+        ),
     ]
 
     # TODO: Add more granular checking of the libraries in use.
@@ -662,22 +676,7 @@ if cppcheck.found()
         cppcheck_args += ['--library=posix']
     endif
 
-    cppcheck_targets = []
-
-    foreach test_name : test_names
-        cppcheck_targets += run_target(
-            'cppcheck-' + test_name,
-            command: [cppcheck] + cppcheck_args + [
-                '--file-filter=*/src/*.c',
-                '--file-filter=*/test/' + test_name + '.c',
-                '--checkers-report=' + (
-                    meson.project_build_root() / 'cppcheck-checkers-' + test_name + '.txt'
-                ),
-            ],
-        )
-    endforeach
-
-    alias_target('cppcheck', cppcheck_targets)
+    run_target('cppcheck', command: [cppcheck] + cppcheck_args)
 else
     tools_summary += {'cppcheck': cppcheck.found()}
 endif

@@ -11,7 +11,7 @@
 #include <crtest.h>
 
 int
-main(void)
+main(void) /* cppcheck-suppress misra-c2012-8.6 */
 {
     struct cr_test status;
     struct cr_buf buf;

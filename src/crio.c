@@ -165,7 +165,7 @@ posix_write_all(int fd, const char *s)
 #endif
 
 /* These functions are part of the public API. */
-/* cppcheck-suppress-begin [misra-c2012-8.7, unusedFunction] */
+/* cppcheck-suppress-begin misra-c2012-8.7 */
 
 enum cr_err
 criout(const char *s)
@@ -189,4 +189,4 @@ crioerr(const char *s)
 #endif
 }
 
-/* cppcheck-suppress-end [misra-c2012-8.7, unusedFunction] */
+/* cppcheck-suppress-end misra-c2012-8.7 */
