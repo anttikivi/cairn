@@ -11,7 +11,7 @@
 
 #ifndef CR_BUF_MAX_BYTES
 #    include <crunit.h>
-#    define CR_BUF_MAX_BYTES CR_KB(1U)
+#    define CR_BUF_MAX_BYTES CR_KB((size_t)1U)
 #endif
 
 struct cr_buf
