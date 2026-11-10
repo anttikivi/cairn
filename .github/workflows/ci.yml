@@ -14,7 +14,7 @@ permissions:
 
 jobs:
   lint:
-    name: ${{ matrix.platform.os }}-${{ matrix.platform.cc }}-${{ matrix.config.name }}-${{ matrix.buildtype }}
+    name: lint-${{ matrix.platform.os }}-${{ matrix.platform.cc }}-${{ matrix.config.name }}-${{ matrix.buildtype }}
     runs-on: ${{ matrix.platform.os }}
     strategy:
       fail-fast: false
