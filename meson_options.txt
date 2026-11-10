@@ -26,4 +26,10 @@ option(
     value: 'auto',
     description: 'Use exact-width integer types from stdint.h',
 )
+option(
+    'testlib',
+    type: 'boolean',
+    value: false,
+    description: 'Build and install the included Cairn testing library',
+)
 option('tests', type: 'boolean', value: true, description: 'Build the tests')

@@ -422,13 +422,7 @@ cfg_summary = {
     'boolean type': bool_type,
 }
 
-src_paths = [
-    'src/crbuf.c',
-    'src/crdbg.c',
-    'src/crio.c',
-    'src/crstr.c',
-    'src/test.c',
-]
+src_paths = ['src/crbuf.c', 'src/crdbg.c', 'src/crio.c', 'src/crstr.c']
 header_paths = [
     'include/crbool.h',
     'include/crbuf.h',
@@ -439,9 +433,11 @@ header_paths = [
     'include/crio.h',
     'include/crstr.h',
     'include/crunit.h',
-    'include/test.h',
 ]
-test_names = ['buffer', 'strings']
+testlib_src_paths = ['src/crtest.c']
+testlib_header_paths = ['include/crtest.h']
+
+test_names = ['buf', 'str']
 test_paths = []
 foreach name : test_names
     test_paths += 'test' / (name + '.c')
@@ -458,18 +454,53 @@ lib = static_library(
 dep = declare_dependency(include_directories: include, link_with: lib)
 meson.override_dependency('cairn', dep)
 
-install_subdir('include', install_dir: get_option('includedir'))
+install_headers(header_paths, install_dir: get_option('includedir'))
 
-import('pkgconfig').generate(lib, name: 'cairn')
+pkgconfig = import('pkgconfig')
+pkgconfig.generate(
+    lib,
+    name: 'cairn',
+    filebase: 'cairn',
+    description: 'Cairn C utility library',
+)
 
-if get_option('tests')
+build_tests = get_option('tests')
+install_testlib = get_option('testlib')
+build_testlib = build_tests or install_testlib
+
+if build_testlib
+    testlib = static_library(
+        'cairntest',
+        files(testlib_src_paths),
+        dependencies: dep,
+        install: install_testlib,
+    )
+    test_dep = declare_dependency(link_with: testlib, dependencies: dep)
+    meson.override_dependency('cairntest', test_dep)
+
+    if install_testlib
+        install_headers(
+            testlib_header_paths,
+            install_dir: get_option('includedir'),
+        )
+        pkgconfig.generate(
+            testlib,
+            name: 'cairntest',
+            filebase: 'cairntest',
+            description: 'Cairn testing library',
+            requires_private: ['cairn'],
+        )
+    endif
+endif
+
+if build_tests
     foreach name : test_names
         test(
             name,
             executable(
                 'test_' + name,
                 'test' / (name + '.c'),
-                dependencies: dep,
+                dependencies: test_dep,
             ),
         )
     endforeach
@@ -477,13 +508,21 @@ endif
 
 root = meson.project_source_root()
 
+compiled_paths = src_paths
+if build_testlib
+    compiled_paths += testlib_src_paths
+endif
+if build_tests
+    compiled_paths += test_paths
+endif
+
 c_paths = []
-foreach path : src_paths + test_paths
+foreach path : compiled_paths
     c_paths += root / path
 endforeach
 
-fmt_paths = c_paths
-foreach path : header_paths
+fmt_paths = []
+foreach path : src_paths + header_paths + test_paths + testlib_src_paths + testlib_header_paths
     fmt_paths += root / path
 endforeach
 

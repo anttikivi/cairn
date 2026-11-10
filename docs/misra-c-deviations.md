@@ -28,3 +28,23 @@ loop which was deemed unsuitable due to even more unpredictable side effects.
 The assertions allow enabling supported debugging breakpoints before the
 termination. Other termination functions are also preferred over `abort` when
 they are available and the library has added support for using them.
+
+## Deviation-002
+
+### Rule
+
+20.10 The `#` and `##` preprocessor operators should not be used
+
+### Scope
+
+The `#` preprocessor rule is used in `include/crdbg.h` and `include/crtest.h`
+
+### Rationale
+
+Both of the headers `include/crdbg.h` and `include/crtest.h` include
+functionality that is meant only for debugging and testing, and the `#` is used
+in those contexts only. It is used in cases where the program would need to
+print the expression that caused the test or assertion to fail. The operator is
+chosen instead of alternative solution, like constant string, to allow more
+practical use and to ensure that the printed expression always matches the
+expression that was tested.
