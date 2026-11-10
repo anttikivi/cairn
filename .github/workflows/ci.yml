@@ -13,20 +13,13 @@ permissions:
   contents: read
 
 jobs:
-  test:
-    name: ${{ matrix.os }}-${{ matrix.buildtype }}
-    runs-on: ${{ matrix.os }}
+  lint:
+    name: ${{ matrix.platform.os }}-${{ matrix.platform.cc }}-${{ matrix.config.name }}-${{ matrix.buildtype }}
+    runs-on: ${{ matrix.platform.os }}
     strategy:
       fail-fast: false
       matrix:
-        os:
-          - macos-latest
-          - ubuntu-latest
-          - windows-latest
-        buildtype:
-          - debug
-          - release
-        include:
+        platform:
           - os: macos-latest
             cc: clang
           - os: ubuntu-latest
@@ -35,8 +28,31 @@ jobs:
             cc: gcc
           - os: windows-latest
             cc: cl
+        buildtype:
+          - debug
+        config:
+          - name: default
+            options: ""
+          - name: minimal
+            options: >-
+              -Dc_std=c89
+              -Dstdint=disabled
+              -Dstdbool=disabled
+              -Dint64=disabled
+          - name: c99
+            options: >-
+              -Dc_std=c99
+              -Dstdint=enabled
+              -Dstdbool=enabled
+              -Dint64=enabled
+          - name: c99-fallback
+            options: >-
+              -Dc_std=c99
+              -Dstdint=disabled
+              -Dstdbool=disabled
+              -Dint64=enabled
     env:
-      CC: ${{ matrix.cc }}
+      CC: ${{ matrix.platform.cc }}
     steps:
       - uses: actions/checkout@v7.0.1
       - uses: actions/setup-python@v7.1.0
@@ -45,6 +61,66 @@ jobs:
       - uses: ilammy/msvc-dev-cmd@v1.13.0
         if: runner.os == 'Windows'
       - run: python -m pip install meson ninja
-      - run: meson setup build -Dbuildtype=${{ matrix.buildtype }}
+      - run: >-
+          meson setup build
+          -Dbuildtype=${{ matrix.buildtype }}
+          ${{ matrix.config.options }}
+      - run: meson compile -C build
+      - run: ninja -C build cppcheck
+      - run: ninja -C build clang-tidy
+        if: ${{ !cancelled() }}
+  test:
+    name: ${{ matrix.platform.os }}-${{ matrix.platform.cc }}-${{ matrix.config.name }}-${{ matrix.buildtype }}
+    runs-on: ${{ matrix.platform.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        platform:
+          - os: macos-latest
+            cc: clang
+          - os: ubuntu-latest
+            cc: clang
+          - os: ubuntu-latest
+            cc: gcc
+          - os: windows-latest
+            cc: cl
+        buildtype:
+          - debug
+          - release
+        config:
+          - name: default
+            options: ""
+          - name: minimal
+            options: >-
+              -Dc_std=c89
+              -Dstdint=disabled
+              -Dstdbool=disabled
+              -Dint64=disabled
+          - name: c99
+            options: >-
+              -Dc_std=c99
+              -Dstdint=enabled
+              -Dstdbool=enabled
+              -Dint64=enabled
+          - name: c99-fallback
+            options: >-
+              -Dc_std=c99
+              -Dstdint=disabled
+              -Dstdbool=disabled
+              -Dint64=enabled
+    env:
+      CC: ${{ matrix.platform.cc }}
+    steps:
+      - uses: actions/checkout@v7.0.1
+      - uses: actions/setup-python@v7.1.0
+        with:
+          python-version: "3.13"
+      - uses: ilammy/msvc-dev-cmd@v1.13.0
+        if: runner.os == 'Windows'
+      - run: python -m pip install meson ninja
+      - run: >-
+          meson setup build
+          -Dbuildtype=${{ matrix.buildtype }}
+          ${{ matrix.config.options }}
       - run: meson compile -C build
       - run: meson test -C build --print-errorlogs
