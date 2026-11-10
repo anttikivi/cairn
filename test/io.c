@@ -91,8 +91,8 @@ main(int argc, char **argv) /* cppcheck-suppress misra-c2012-8.6 */
 
     if (result == EXIT_SUCCESS)
     {
-        /* False positive, crbool is essentially Boolean here. */
-        /* cppcheck-suppress misra-c2012-14.4 */
+        /* False positive: the integer fallback is essentially Boolean. */
+        /* cppcheck-suppress [misra-c2012-14.4, unmatchedSuppression] */
         if (to_stderr)
         {
             err = crioerr(text);
