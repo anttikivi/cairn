@@ -67,8 +67,12 @@ jobs:
           sudo apt-get update
           sudo apt-get install cppcheck
         if: runner.os == 'Linux'
-      - run: choco install cppcheck --yes --no-progress
+      - run: |
+          choco install cppcheck --yes --no-progress
+          $cppcheckDir = Join-Path $env:ProgramFiles "Cppcheck"
+          $cppcheckDir >> $env:GITHUB_PATH
         if: runner.os == 'Windows'
+        shell: pwsh
       - run: >-
           meson setup build
           -Dbuildtype=${{ matrix.buildtype }}
