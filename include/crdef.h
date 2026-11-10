@@ -1,3 +1,9 @@
+/*
+ * SPDX-FileCopyrightText: (C) 2026 Antti Kivi <antti@anttikivi.com>
+ *
+ * SPDX-License-Identifier: LGPL-3.0-or-later
+ */
+
 #ifndef CRDEF_H
 #define CRDEF_H
 

@@ -9,6 +9,8 @@ path = [
   ".clangd",
   ".editorconfig",
   "build/",
+  "docs/misra-c-deviations.md",
+  "tools/cppcheck-library.xml",
   "tools/misra.json.in",
   "README.md",
   "THIRD_PARTY_NOTICES",
