@@ -548,7 +548,12 @@ clang_tidy = find_program('clang-tidy', required: false)
 if clang_tidy.found()
     tools_summary += {'clang-tidy': clang_tidy}
 
-    clang_tidy_args = ['-p', meson.project_build_root(), '--quiet']
+    clang_tidy_args = [
+        '-p',
+        meson.project_build_root(),
+        '--quiet',
+        '--extra-arg=-Wno-unknown-warning-option',
+    ]
     if cc.get_argument_syntax() == 'msvc'
         clang_tidy_args += [
             '--extra-arg=-Wno-unused-command-line-argument',
