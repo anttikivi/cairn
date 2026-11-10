@@ -626,11 +626,17 @@ if cppcheck.found()
         endif
 
         foreach macro : ['_WIN32', '_WIN64']
-            value = cc.get_define(macro)
-            if value != ''
-                cppcheck_args += ['-D' + macro + '=' + value]
+            macro_value = cc.get_define(macro)
+            if macro_value != ''
+                cppcheck_args += ['-D' + macro + '=' + macro_value]
             endif
         endforeach
+
+        windows_false = cc.get_define('FALSE', prefix: '#include <windows.h>')
+        if windows_false == ''
+            error('could not get FALSE from windows.h')
+        endif
+        cppcheck_args += ['-DFALSE=' + windows_false]
 
         if cc.get_argument_syntax() == 'msvc' and not meson.is_cross_build()
             include_result = run_command(
