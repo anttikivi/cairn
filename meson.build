@@ -618,7 +618,40 @@ if cppcheck.found()
 
     # TODO: Add more granular checking of the libraries in use.
     if host_machine.system() == 'windows'
-        cppcheck_args += ['--library=windows', '-D_WIN32=1']
+        cppcheck_args += ['--library=windows']
+
+        pointer_size = cc.sizeof('void *')
+        if pointer_size == 8
+            cppcheck_args += ['--platform=win64']
+        endif
+
+        foreach macro : ['_WIN32', '_WIN64']
+            value = cc.get_define(macro)
+            if value != ''
+                cppcheck_args += ['-D' + macro + '=' + value]
+            endif
+        endforeach
+
+        if cc.get_argument_syntax() == 'msvc' and not meson.is_cross_build()
+            include_result = run_command(
+                'cmd.exe',
+                '/d',
+                '/c',
+                'set INCLUDE',
+                check: false,
+            )
+            foreach line : include_result.stdout().split('\n')
+                line = line.strip()
+                if line.to_upper().startswith('INCLUDE=')
+                    foreach directory : line.substring(8).split(';')
+                        directory = directory.strip()
+                        if directory != ''
+                            cppcheck_args += ['-I' + directory]
+                        endif
+                    endforeach
+                endif
+            endforeach
+        endif
     else
         cppcheck_args += ['--library=posix']
     endif
