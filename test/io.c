@@ -24,7 +24,7 @@ main(int argc, char **argv) /* cppcheck-suppress misra-c2012-8.6 */
     enum cr_err expected = CR_ERR_OK;
     enum cr_err err;
     const char *stream;
-    const char *text;
+    const char *text = NULL;
     crbool to_stderr = CR_FALSE;
 
     if (argc != 4)
