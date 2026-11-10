@@ -713,6 +713,7 @@ if uvx.found()
             root / 'include',
             root / 'src',
             root / 'test',
+            root / 'ruff.toml',
         ],
     )
     reuse_annotate_templates = run_target(
