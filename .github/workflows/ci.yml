@@ -61,6 +61,14 @@ jobs:
       - uses: ilammy/msvc-dev-cmd@v1.13.0
         if: runner.os == 'Windows'
       - run: python -m pip install meson ninja
+      - run: brew install cppcheck
+        if: runner.os == 'macOS'
+      - run: |
+          sudo apt-get update
+          sudo apt-get install cppcheck
+        if: runner.os == 'Linux'
+      - run: choco install cppcheck --yes --no-progress
+        if: runner.os == 'Windows'
       - run: >-
           meson setup build
           -Dbuildtype=${{ matrix.buildtype }}
