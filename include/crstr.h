@@ -16,11 +16,14 @@
 size_t crsnlen(const char *s, size_t n);
 
 /*
- * Compare two null-terminated byte strings lexicographically. Characters
- * following the null character are ignored. The parameters n and m are
- * the maximum number of characters to compare from l and r, respectively.
- * Essentially they should be the buffer sizes if the goal is to check whether
- * the two strings are equal.
+ * Compare two possibly null-terminated byte strings lexicographically.
+ * Characters following the null character are ignored. The parameters n and m
+ * are the maximum number of characters to compare from l and r, respectively.
+ * Essentially they should be the buffer sizes of l and r if the goal is to
+ * check whether the two strings are equal.
+ *
+ * The return value is negative if l appears before r in lexicographical order
+ * and positive the other way around. It is zero if l and r compare equal.
  */
 int crsncmp(const char *l, size_t n, const char *r, size_t m);
 

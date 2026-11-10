@@ -39,8 +39,8 @@ test_crsncmp(void)
     struct cr_test status;
     char buf_1[] = {'a', 'b', 'c'};
     char buf_2[] = {'a', 'b', 'c', 'd'};
-    char high[] = "\x80";
-    char low[] = "\x7f";
+    const char high[] = "\x80";
+    const char low[] = "\x7f";
 
     crtinit(&status, "str/crsncmp");
 

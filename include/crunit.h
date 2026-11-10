@@ -7,6 +7,6 @@
 #ifndef CRUNIT_H
 #define CRUNIT_H
 
-#define CR_KB(n) ((n) << 10U)
+#define CR_KB(n) ((n) * 1024U)
 
 #endif

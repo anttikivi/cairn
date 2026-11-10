@@ -7,6 +7,9 @@
 #ifndef CRCFG_H
 #define CRCFG_H
 
+/* These macro definitions are part of the public API. */
+/* cppcheck-suppress-begin misra-c2012-2.5 */
+
 #mesondefine CR_BREAKPOINTS
 
 #mesondefine CR_USE_STDINT
@@ -49,5 +52,7 @@
 
 #mesondefine CR_LEAST_U64_TYPE
 #mesondefine CR_LEAST_U64_TYPE_MAX
+
+/* cppcheck-suppress-end misra-c2012-2.5 */
 
 #endif

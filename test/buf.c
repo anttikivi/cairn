@@ -15,8 +15,10 @@ main(void)
 {
     struct cr_test status;
     struct cr_buf buf;
-    char full[CR_BUF_MAX_BYTES];
+    char filled[CR_BUF_MAX_BYTES];
     size_t i;
+    size_t full_expected_len = (size_t)CR_BUF_MAX_BYTES;
+    full_expected_len--;
 
     crtinit(&status, "buf");
 
@@ -65,22 +67,24 @@ main(void)
 
     for (i = 0U; i < CR_BUF_MAX_BYTES - 1U; i++)
     {
-        full[i] = 'x';
+        filled[i] = 'x';
     }
-    full[CR_BUF_MAX_BYTES - 1U] = '\0';
+    filled[CR_BUF_MAX_BYTES - 1U] = '\0';
 
-    crbastr(&buf, full);
+    crbastr(&buf, filled);
 
-    CR_EXPECT_SIZE_EQ(&status, CR_BUF_MAX_BYTES - 1U, buf.len);
-    CR_EXPECT_INT_EQ(&status, 0,
-                     crsncmp(full, sizeof(full), buf.data, sizeof(buf.data)));
+    CR_EXPECT_SIZE_EQ(&status, full_expected_len, buf.len);
+    CR_EXPECT_INT_EQ(
+        &status, 0,
+        crsncmp(filled, sizeof(filled), buf.data, sizeof(buf.data)));
     CR_EXPECT_CHAR_EQ(&status, '\0', buf.data[buf.len]);
 
     crbastr(&buf, "ignored");
 
-    CR_EXPECT_SIZE_EQ(&status, CR_BUF_MAX_BYTES - 1U, buf.len);
-    CR_EXPECT_INT_EQ(&status, 0,
-                     crsncmp(full, sizeof(full), buf.data, sizeof(buf.data)));
+    CR_EXPECT_SIZE_EQ(&status, full_expected_len, buf.len);
+    CR_EXPECT_INT_EQ(
+        &status, 0,
+        crsncmp(filled, sizeof(filled), buf.data, sizeof(buf.data)));
     CR_EXPECT_CHAR_EQ(&status, '\0', buf.data[buf.len]);
 
     crbinit(&buf);

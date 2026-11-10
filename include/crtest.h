@@ -21,7 +21,8 @@ void crtinit(struct cr_test *status, const char *name);
  * Return the applicable program return code for the given test run and print
  * the final failure status.
  */
-int crtresult(struct cr_test *status);
+int crtresult(const struct cr_test *status);
+
 /* Test if a char is equal to the expected value. */
 void crtceq(struct cr_test *status, const char *file, int line,
             const char *expr, char expected, char actual);
@@ -44,6 +45,11 @@ void crtilt(struct cr_test *status, const char *file, int line,
 void crtseq(struct cr_test *status, const char *file, int line,
             const char *expr, size_t expected, size_t actual);
 
+/* These macro definitions are part of the public API. */
+/* cppcheck-suppress-begin misra-c2012-2.5 */
+
+/* Deviation-002 */
+/* cppcheck-suppress-begin misra-c2012-20.10 */
 #define CR_EXPECT_CHAR_EQ(test, expected, actual)                              \
     crtceq((test), __FILE__, __LINE__, #actual, (char)(expected),              \
            (char)(actual))
@@ -59,7 +65,8 @@ void crtseq(struct cr_test *status, const char *file, int line,
     crtilt((test), __FILE__, __LINE__, #actual, (int)(cmp), (int)(actual))
 
 #define CR_EXPECT_SIZE_EQ(test, expected, actual)                              \
-    crtseq((test), __FILE__, __LINE__, #actual, (size_t)(expected),            \
-           (size_t)(actual))
+    crtseq((test), __FILE__, __LINE__, #actual, (expected), (actual))
+/* cppcheck-suppress-end misra-c2012-20.10 */
+/* cppcheck-suppress-end misra-c2012-2.5 */
 
 #endif

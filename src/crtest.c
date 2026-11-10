@@ -9,35 +9,42 @@
 #include <crbuf.h>
 #include <crio.h>
 
+/*
+ * TODO: See if failing to print the test output should affect the test results.
+ */
+
 void
 crtinit(struct cr_test *status, const char *name)
 {
     status->name = name;
     status->failures = 0U;
-    crioerr("\n");
-    crioerr(name);
-    crioerr("\n");
+    (void)crioerr("\n");
+    (void)crioerr(name);
+    (void)crioerr("\n");
 }
 
 int
-crtresult(struct cr_test *status)
+crtresult(const struct cr_test *status)
 {
     int result = EXIT_SUCCESS;
-    if (status->failures > 0)
+    if (status->failures > 0U)
     {
-        crioerr("failures in ");
-        crioerr(status->name);
-        crioerr("\n");
+        (void)crioerr("failures in ");
+        (void)crioerr(status->name);
+        (void)crioerr("\n");
         result = EXIT_FAILURE;
     }
     else
     {
-        crioerr("all tests in ");
-        crioerr(status->name);
-        crioerr(" passed\n");
+        (void)crioerr("all tests in ");
+        (void)crioerr(status->name);
+        (void)crioerr(" passed\n");
     }
     return result;
 }
+
+/* These functions are part of the public API. */
+/* cppcheck-suppress-begin [misra-c2012-8.7, unusedFunction] */
 
 void
 crtceq(struct cr_test *status, const char *file, int line, const char *expr,
@@ -71,7 +78,7 @@ crtceq(struct cr_test *status, const char *file, int line, const char *expr,
             crbachar(&buf, actual);
         }
         crbachar(&buf, '\n');
-        crioerr(buf.data);
+        (void)crioerr(buf.data);
         status->failures++;
     }
 }
@@ -94,7 +101,7 @@ crtieq(struct cr_test *status, const char *file, int line, const char *expr,
         crbastr(&buf, ", got ");
         crbaint(&buf, actual);
         crbachar(&buf, '\n');
-        crioerr(buf.data);
+        (void)crioerr(buf.data);
         status->failures++;
     }
 }
@@ -117,7 +124,7 @@ crtige(struct cr_test *status, const char *file, int line, const char *expr,
         crbastr(&buf, ", got ");
         crbaint(&buf, actual);
         crbachar(&buf, '\n');
-        crioerr(buf.data);
+        (void)crioerr(buf.data);
         status->failures++;
     }
 }
@@ -140,7 +147,7 @@ crtigt(struct cr_test *status, const char *file, int line, const char *expr,
         crbastr(&buf, ", got ");
         crbaint(&buf, actual);
         crbachar(&buf, '\n');
-        crioerr(buf.data);
+        (void)crioerr(buf.data);
         status->failures++;
     }
 }
@@ -163,7 +170,7 @@ crtile(struct cr_test *status, const char *file, int line, const char *expr,
         crbastr(&buf, ", got ");
         crbaint(&buf, actual);
         crbachar(&buf, '\n');
-        crioerr(buf.data);
+        (void)crioerr(buf.data);
         status->failures++;
     }
 }
@@ -186,7 +193,7 @@ crtilt(struct cr_test *status, const char *file, int line, const char *expr,
         crbastr(&buf, ", got ");
         crbaint(&buf, actual);
         crbachar(&buf, '\n');
-        crioerr(buf.data);
+        (void)crioerr(buf.data);
         status->failures++;
     }
 }
@@ -209,7 +216,9 @@ crtseq(struct cr_test *status, const char *file, int line, const char *expr,
         crbastr(&buf, ", got ");
         crbasize(&buf, actual);
         crbachar(&buf, '\n');
-        crioerr(buf.data);
+        (void)crioerr(buf.data);
         status->failures++;
     }
 }
+
+/* cppcheck-suppress-end [misra-c2012-8.7, unusedFunction] */

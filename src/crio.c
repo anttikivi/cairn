@@ -65,7 +65,7 @@ win32_write_all(DWORD handle_id, const char *s)
 
     if (result == CR_ERR_OK)
     {
-        while ((len < CR_IO_MAX_OUTPUT_BYTES) && s[len] != '\0')
+        while ((len < CR_IO_MAX_OUTPUT_BYTES) && (s[len] != '\0'))
         {
             len++;
         }
@@ -115,7 +115,7 @@ posix_write_all(int fd, const char *s)
 
     if (result == CR_ERR_OK)
     {
-        while ((len < CR_IO_MAX_OUTPUT_BYTES) && s[len] != '\0')
+        while ((len < CR_IO_MAX_OUTPUT_BYTES) && (s[len] != '\0'))
         {
             len++;
         }
@@ -132,8 +132,10 @@ posix_write_all(int fd, const char *s)
         ssize_t ret = 0;
         errno = 0;
         ret = write(fd, &s[written], len - written);
-        if (ret <= 0)
+        if (ret < 0)
         {
+            /* POSIX write is an errno-setting function. */
+            /* cppcheck-suppress [misra-config, misra-c2012-22.10] */
             if ((errno == EINTR) || (errno == EAGAIN) || (errno == EWOULDBLOCK))
             {
                 retries++;
@@ -147,6 +149,10 @@ posix_write_all(int fd, const char *s)
                 result = CR_ERR_IO_WRITE_FAILED;
             }
         }
+        else if (ret == 0)
+        {
+            result = CR_ERR_IO_WRITE_FAILED;
+        }
         else
         {
             written += (size_t)ret;
@@ -157,6 +163,9 @@ posix_write_all(int fd, const char *s)
     return result;
 }
 #endif
+
+/* These functions are part of the public API. */
+/* cppcheck-suppress-begin [misra-c2012-8.7, unusedFunction] */
 
 enum cr_err
 criout(const char *s)
@@ -179,3 +188,5 @@ crioerr(const char *s)
     return posix_write_all(CR_STDERR_FD, s);
 #endif
 }
+
+/* cppcheck-suppress-end [misra-c2012-8.7, unusedFunction] */

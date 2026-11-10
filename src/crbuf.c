@@ -27,7 +27,7 @@ crbachar(struct cr_buf *b, char c)
     if (b->len < (CR_BUF_MAX_BYTES - 1U))
     {
         b->data[b->len] = c;
-        b->data[b->len + 1] = '\0';
+        b->data[b->len + 1U] = '\0';
         b->len++;
     }
 

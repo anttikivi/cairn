@@ -45,7 +45,18 @@ crsncmp(const char *l, size_t n, const char *r, size_t m)
 
         a = (i < n) ? (unsigned char)l[i] : (unsigned char)'\0';
         b = (i < m) ? (unsigned char)r[i] : (unsigned char)'\0';
-        result = a - b;
+        if (a < b)
+        {
+            result = -1;
+        }
+        else if (a > b)
+        {
+            result = 1;
+        }
+        else
+        {
+            ; /* no-op, result is already zero */
+        }
     }
 
     return result;

@@ -11,6 +11,9 @@
 
 #include <limits.h>
 
+/* These types and macro definitions are part of the public API. */
+/* cppcheck-suppress-begin [misra-c2012-2.3, misra-c2012-2.5] */
+
 #if CR_USE_STDINT
 
 #    include <stdint.h>
@@ -204,5 +207,7 @@ typedef CR_LEAST_U64_TYPE cr_least_u64;
 #    endif
 
 #endif
+
+/* cppcheck-suppress-end [misra-c2012-2.3, misra-c2012-2.5] */
 
 #endif
