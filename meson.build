@@ -425,8 +425,8 @@ cfg_summary = {
 src_paths = [
     'src/crbuf.c',
     'src/crdbg.c',
-    'src/io.c',
-    'src/strings.c',
+    'src/crio.c',
+    'src/crstr.c',
     'src/test.c',
 ]
 header_paths = [
@@ -434,11 +434,11 @@ header_paths = [
     'include/crbuf.h',
     'include/crdbg.h',
     'include/crdef.h',
+    'include/crerr.h',
     'include/crint.h',
+    'include/crio.h',
+    'include/crstr.h',
     'include/crunit.h',
-    'include/error.h',
-    'include/io.h',
-    'include/strings.h',
     'include/test.h',
 ]
 test_names = ['buffer', 'strings']

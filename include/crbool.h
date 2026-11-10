@@ -7,7 +7,7 @@
 #ifndef CRBOOL_H
 #define CRBOOL_H
 
-#include <cairn/crcfg.h>
+#include <crcfg.h>
 
 #if CR_USE_STDBOOL
 #    include <stdbool.h>

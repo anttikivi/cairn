@@ -4,10 +4,10 @@
  * SPDX-License-Identifier: LGPL-3.0-or-later
  */
 
-#include <cairn/strings.h>
+#include <crstr.h>
 
 size_t
-cairn_str_nlen(const char *s, size_t n)
+crsnlen(const char *s, size_t n)
 {
     size_t len = 0U;
     if (s != NULL)
@@ -21,7 +21,7 @@ cairn_str_nlen(const char *s, size_t n)
 }
 
 int
-cairn_str_ncmp(const char *l, size_t n, const char *r, size_t m)
+crsncmp(const char *l, size_t n, const char *r, size_t m)
 {
     int result = 0;
 

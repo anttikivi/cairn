@@ -4,19 +4,19 @@
  * SPDX-License-Identifier: LGPL-3.0-or-later
  */
 
-#include <cairn/crdbg.h>
+#include <crdbg.h>
 
 #include <limits.h>
 #include <stddef.h>
 #include <stdlib.h>
 
-#include <cairn/crbool.h>
+#include <crbool.h>
 
 #ifdef _WIN32
 #    define WIN32_LEAN_AND_MEAN
 #    include <windows.h>
 #else
-#    include <cairn/crint.h>
+#    include <crint.h>
 #    include <errno.h>
 #    include <unistd.h>
 #    ifndef CR_ERR_STDERR_FD

@@ -4,26 +4,26 @@
  * SPDX-License-Identifier: LGPL-3.0-or-later
  */
 
-#include <cairn/io.h>
+#include <crio.h>
 
 #include <limits.h>
 #include <stddef.h>
-#include <stdint.h>
 
-#include <cairn/debug.h>
-#include <cairn/error.h>
+#include <crdbg.h>
+#include <crerr.h>
+#include <crint.h>
 
-#ifndef CAIRN_IO_MAX_OUTPUT_BYTES
-#    define CAIRN_IO_MAX_OUTPUT_BYTES (4096U)
+#ifndef CR_IO_MAX_OUTPUT_BYTES
+#    define CR_IO_MAX_OUTPUT_BYTES (4096U)
 #endif
 
-#ifndef CAIRN_IO_MAX_OUTPUT_RETRIES
-#    define CAIRN_IO_MAX_OUTPUT_RETRIES (100U)
+#ifndef CR_IO_MAX_OUTPUT_RETRIES
+#    define CR_IO_MAX_OUTPUT_RETRIES (100U)
 #endif
 
-#if CAIRN_IO_MAX_OUTPUT_RETRIES > UCHAR_MAX
+#if CR_IO_MAX_OUTPUT_RETRIES > UCHAR_MAX
 #    error                                                                     \
-        "value of CAIRN_IO_MAX_OUTPUT_RETRIES is greater than the maximum of uint8_t"
+        "value of CR_IO_MAX_OUTPUT_RETRIES is greater than the maximum of unsigned char"
 #endif
 
 #ifdef _WIN32
@@ -32,52 +32,52 @@
 #else
 #    include <errno.h>
 #    include <unistd.h>
-#    ifndef CAIRN_STDOUT_FD
-#        define CAIRN_STDOUT_FD (1)
+#    ifndef CR_STDOUT_FD
+#        define CR_STDOUT_FD (1)
 #    endif
-#    ifndef CAIRN_STDERR_FD
-#        define CAIRN_STDERR_FD (2)
+#    ifndef CR_STDERR_FD
+#        define CR_STDERR_FD (2)
 #    endif
 #endif
 
 #ifdef _WIN32
-static enum cairn_error
+static enum cr_err
 win32_write_all(DWORD handle_id, const char *s)
 {
-    enum cairn_error result = CAIRN_ERR_OK;
+    enum cr_err result = CR_ERR_OK;
     HANDLE handle = NULL;
     size_t len = 0U;
     DWORD written = 0U;
 
     if (s == NULL)
     {
-        result = CAIRN_ERR_IO_INVALID;
+        result = CR_ERR_IO_NULL_STRING;
     }
 
-    if (result == CAIRN_ERR_OK)
+    if (result == CR_ERR_OK)
     {
         handle = GetStdHandle(handle_id);
         if ((handle == NULL) || (handle == INVALID_HANDLE_VALUE))
         {
-            result = CAIRN_ERR_IO_WRITE_FAILED;
+            result = CR_ERR_IO_WRITE_FAILED;
         }
     }
 
-    if (result == CAIRN_ERR_OK)
+    if (result == CR_ERR_OK)
     {
-        while ((len < CAIRN_IO_MAX_OUTPUT_BYTES) && s[len] != '\0')
+        while ((len < CR_IO_MAX_OUTPUT_BYTES) && s[len] != '\0')
         {
             len++;
         }
     }
 
-    if ((result == CAIRN_ERR_OK) &&
-        (len == (size_t)CAIRN_IO_MAX_OUTPUT_BYTES) && (s[len] != '\0'))
+    if ((result == CR_ERR_OK) && (len == (size_t)CR_IO_MAX_OUTPUT_BYTES) &&
+        (s[len] != '\0'))
     {
-        result = CAIRN_ERR_IO_INVALID;
+        result = CR_ERR_IO_INPUT_OVERFLOW;
     }
 
-    while ((written < (DWORD)len) && (result == CAIRN_ERR_OK))
+    while ((written < (DWORD)len) && (result == CR_ERR_OK))
     {
         BOOL ok;
         DWORD w;
@@ -89,7 +89,7 @@ win32_write_all(DWORD handle_id, const char *s)
 
         if ((ok == FALSE) || (w == 0U))
         {
-            result = CAIRN_ERR_IO_WRITE_FAILED;
+            result = CR_ERR_IO_WRITE_FAILED;
         }
         else
         {
@@ -100,34 +100,34 @@ win32_write_all(DWORD handle_id, const char *s)
     return result;
 }
 #else
-static enum cairn_error
+static enum cr_err
 posix_write_all(int fd, const char *s)
 {
-    enum cairn_error result = CAIRN_ERR_OK;
+    enum cr_err result = CR_ERR_OK;
     size_t len = 0U;
     size_t written = 0U;
-    uint8_t retries = 0U;
+    cr_least_u8 retries = 0U;
 
     if (s == NULL)
     {
-        result = CAIRN_ERR_IO_INVALID;
+        result = CR_ERR_IO_NULL_STRING;
     }
 
-    if (result == CAIRN_ERR_OK)
+    if (result == CR_ERR_OK)
     {
-        while ((len < CAIRN_IO_MAX_OUTPUT_BYTES) && s[len] != '\0')
+        while ((len < CR_IO_MAX_OUTPUT_BYTES) && s[len] != '\0')
         {
             len++;
         }
     }
 
-    if ((result == CAIRN_ERR_OK) &&
-        (len == (size_t)CAIRN_IO_MAX_OUTPUT_BYTES) && (s[len] != '\0'))
+    if ((result == CR_ERR_OK) && (len == (size_t)CR_IO_MAX_OUTPUT_BYTES) &&
+        (s[len] != '\0'))
     {
-        result = CAIRN_ERR_IO_INVALID;
+        result = CR_ERR_IO_INPUT_OVERFLOW;
     }
 
-    while ((written < len) && (result == CAIRN_ERR_OK))
+    while ((written < len) && (result == CR_ERR_OK))
     {
         ssize_t ret = 0;
         errno = 0;
@@ -137,14 +137,14 @@ posix_write_all(int fd, const char *s)
             if ((errno == EINTR) || (errno == EAGAIN) || (errno == EWOULDBLOCK))
             {
                 retries++;
-                if (retries >= CAIRN_IO_MAX_OUTPUT_RETRIES)
+                if (retries >= CR_IO_MAX_OUTPUT_RETRIES)
                 {
-                    result = CAIRN_ERR_IO_WRITE_FAILED;
+                    result = CR_ERR_IO_WRITE_FAILED;
                 }
             }
             else
             {
-                result = CAIRN_ERR_IO_WRITE_FAILED;
+                result = CR_ERR_IO_WRITE_FAILED;
             }
         }
         else
@@ -158,24 +158,24 @@ posix_write_all(int fd, const char *s)
 }
 #endif
 
-enum cairn_error
-cairn_io_print_out(const char *s)
+enum cr_err
+criout(const char *s)
 {
-    CAIRN_ASSERT(s != NULL);
+    CR_ASSERT(s != NULL);
 #ifdef _WIN32
     return win32_write_all(STD_OUTPUT_HANDLE, s);
 #else
-    return posix_write_all(CAIRN_STDOUT_FD, s);
+    return posix_write_all(CR_STDOUT_FD, s);
 #endif
 }
 
-enum cairn_error
-cairn_io_print_err(const char *s)
+enum cr_err
+crioerr(const char *s)
 {
-    CAIRN_ASSERT(s != NULL);
+    CR_ASSERT(s != NULL);
 #ifdef _WIN32
     return win32_write_all(STD_ERROR_HANDLE, s);
 #else
-    return posix_write_all(CAIRN_STDERR_FD, s);
+    return posix_write_all(CR_STDERR_FD, s);
 #endif
 }

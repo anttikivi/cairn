@@ -4,46 +4,46 @@
  * SPDX-License-Identifier: LGPL-3.0-or-later
  */
 
-#include <cairn/buffer.h>
+#include <crbuf.h>
 
 #include <stddef.h>
 
-#include <cairn/debug.h>
-#include <cairn/strings.h>
+#include <crdbg.h>
+#include <crstr.h>
 
 void
-cairn_buffer_init(struct cairn_buffer *b)
+crbinit(struct cr_buf *b)
 {
-    CAIRN_ASSERT(b != NULL);
+    CR_ASSERT(b != NULL);
     b->len = 0;
     b->data[0] = '\0';
 }
 
 void
-cairn_buffer_append_char(struct cairn_buffer *b, char c)
+crbachar(struct cr_buf *b, char c)
 {
-    CAIRN_ASSERT(b != NULL);
+    CR_ASSERT(b != NULL);
 
-    if (b->len < (CAIRN_BUFFER_MAX_BYTES - 1U))
+    if (b->len < (CR_BUF_MAX_BYTES - 1U))
     {
         b->data[b->len] = c;
         b->data[b->len + 1] = '\0';
         b->len++;
     }
 
-    CAIRN_ASSERT(b->len <= CAIRN_BUFFER_MAX_BYTES);
-    CAIRN_ASSERT(cairn_str_nlen(b->data, CAIRN_BUFFER_MAX_BYTES) <= b->len);
+    CR_ASSERT(b->len <= CR_BUF_MAX_BYTES);
+    CR_ASSERT(crsnlen(b->data, CR_BUF_MAX_BYTES) <= b->len);
 }
 
 void
-cairn_buffer_append_str(struct cairn_buffer *b, const char *s)
+crbastr(struct cr_buf *b, const char *s)
 {
     size_t i = 0;
 
-    CAIRN_ASSERT(b != NULL);
-    CAIRN_ASSERT(s != NULL);
+    CR_ASSERT(b != NULL);
+    CR_ASSERT(s != NULL);
 
-    while ((s[i] != '\0') && (b->len < (CAIRN_BUFFER_MAX_BYTES - 1U)))
+    while ((s[i] != '\0') && (b->len < (CR_BUF_MAX_BYTES - 1U)))
     {
         b->data[b->len] = s[i];
         b->len++;
@@ -52,18 +52,18 @@ cairn_buffer_append_str(struct cairn_buffer *b, const char *s)
 
     b->data[b->len] = '\0';
 
-    CAIRN_ASSERT(b->len <= CAIRN_BUFFER_MAX_BYTES);
-    CAIRN_ASSERT(cairn_str_nlen(b->data, CAIRN_BUFFER_MAX_BYTES) <= b->len);
+    CR_ASSERT(b->len <= CR_BUF_MAX_BYTES);
+    CR_ASSERT(crsnlen(b->data, CR_BUF_MAX_BYTES) <= b->len);
 }
 
 void
-cairn_buffer_append_size(struct cairn_buffer *b, size_t d)
+crbasize(struct cr_buf *b, size_t d)
 {
     char tmp[32]; /* overkill */
     size_t i = 0U;
     size_t u = d;
 
-    CAIRN_ASSERT(b != NULL);
+    CR_ASSERT(b != NULL);
 
     do
     {
@@ -72,7 +72,7 @@ cairn_buffer_append_size(struct cairn_buffer *b, size_t d)
         u /= 10U;
     } while (u > 0U);
 
-    while ((i > 0U) && (b->len < (CAIRN_BUFFER_MAX_BYTES - 1U)))
+    while ((i > 0U) && (b->len < (CR_BUF_MAX_BYTES - 1U)))
     {
         i--;
         b->data[b->len] = tmp[i];
@@ -81,22 +81,22 @@ cairn_buffer_append_size(struct cairn_buffer *b, size_t d)
 
     b->data[b->len] = '\0';
 
-    CAIRN_ASSERT(b->len < CAIRN_BUFFER_MAX_BYTES);
-    CAIRN_ASSERT(cairn_str_nlen(b->data, CAIRN_BUFFER_MAX_BYTES) <= b->len);
+    CR_ASSERT(b->len < CR_BUF_MAX_BYTES);
+    CR_ASSERT(crsnlen(b->data, CR_BUF_MAX_BYTES) <= b->len);
 }
 
 void
-cairn_buffer_append_int(struct cairn_buffer *b, int d)
+crbaint(struct cr_buf *b, int d)
 {
     char tmp[32]; /* overkill */
     size_t i = 0U;
     unsigned int u;
 
-    CAIRN_ASSERT(b != NULL);
+    CR_ASSERT(b != NULL);
 
     if (d < 0)
     {
-        if (b->len < (CAIRN_BUFFER_MAX_BYTES - 1U))
+        if (b->len < (CR_BUF_MAX_BYTES - 1U))
         {
             b->data[b->len] = '-';
             b->len++;
@@ -115,7 +115,7 @@ cairn_buffer_append_int(struct cairn_buffer *b, int d)
         u /= 10U;
     } while (u > 0U);
 
-    while ((i > 0U) && (b->len < (CAIRN_BUFFER_MAX_BYTES - 1U)))
+    while ((i > 0U) && (b->len < (CR_BUF_MAX_BYTES - 1U)))
     {
         i--;
         b->data[b->len] = tmp[i];
@@ -124,6 +124,6 @@ cairn_buffer_append_int(struct cairn_buffer *b, int d)
 
     b->data[b->len] = '\0';
 
-    CAIRN_ASSERT(b->len < CAIRN_BUFFER_MAX_BYTES);
-    CAIRN_ASSERT(cairn_str_nlen(b->data, CAIRN_BUFFER_MAX_BYTES) <= b->len);
+    CR_ASSERT(b->len < CR_BUF_MAX_BYTES);
+    CR_ASSERT(crsnlen(b->data, CR_BUF_MAX_BYTES) <= b->len);
 }

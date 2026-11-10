@@ -7,8 +7,8 @@
 #ifndef CRDBG_H
 #define CRDBG_H
 
-#include <cairn/crbool.h>
-#include <cairn/crdef.h>
+#include <crbool.h>
+#include <crdef.h>
 
 #ifndef NDEBUG
 #    define CR_ASSERT(condition)                                               \

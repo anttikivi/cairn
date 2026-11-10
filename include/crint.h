@@ -7,7 +7,7 @@
 #ifndef CRINT_H
 #define CRINT_H
 
-#include <cairn/crcfg.h>
+#include <crcfg.h>
 
 #include <limits.h>
 
