@@ -408,6 +408,7 @@ int main(void)
 endif
 
 cfg.set('CR_BOOL_TYPE', bool_type)
+cfg.set10('CR_USE_BUILTIN_BOOL', bool_type == '_Bool')
 cfg.set10('CR_BREAKPOINTS', get_option('breakpoints'))
 cfg.set10('CR_USE_STDINT', use_stdint)
 cfg.set10('CR_USE_STDBOOL', use_stdbool)

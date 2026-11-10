@@ -17,6 +17,7 @@
 #mesondefine CR_USE_INT64
 
 #mesondefine CR_BOOL_TYPE
+#mesondefine CR_USE_BUILTIN_BOOL
 
 #mesondefine CR_I8_TYPE
 #mesondefine CR_I8_TYPE_MAX
