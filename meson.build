@@ -600,9 +600,6 @@ if cppcheck.found()
         '--error-exitcode=1',
         '--library=' + (root / 'tools' / 'cppcheck-library.xml'),
         '--addon=' + (meson.current_build_dir() / 'misra.json'),
-        '--checkers-report=' + (
-            meson.project_build_root() / 'cppcheck-checkers.txt'
-        ),
     ]
 
     # TODO: Add more granular checking of the libraries in use.
@@ -612,10 +609,22 @@ if cppcheck.found()
         cppcheck_args += ['--library=posix']
     endif
 
-    run_target(
-        'cppcheck',
-        command: [cppcheck] + cppcheck_args,
-    )
+    cppcheck_targets = []
+
+    foreach test_name : test_names
+        cppcheck_targets += run_target(
+            'cppcheck-' + test_name,
+            command: [cppcheck] + cppcheck_args + [
+                '--file-filter=*/src/*.c',
+                '--file-filter=*/test/' + test_name + '.c',
+                '--checkers-report=' + (
+                    meson.project_build_root() / 'cppcheck-checkers-' + test_name + '.txt'
+                ),
+            ],
+        )
+    endforeach
+
+    alias_target('cppcheck', cppcheck_targets)
 else
     tools_summary += {'cppcheck': cppcheck.found()}
 endif
