@@ -617,7 +617,7 @@ if cppcheck.found()
 
     # TODO: Add more granular checking of the libraries in use.
     if host_machine.system() == 'windows'
-        cppcheck_args += ['--library=windows']
+        cppcheck_args += ['--library=windows', '-D_WIN32=1']
     else
         cppcheck_args += ['--library=posix']
     endif
