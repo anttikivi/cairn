@@ -21,6 +21,7 @@ jobs:
       matrix:
         os:
           - macos-latest
+          - ubuntu-latest
           - windows-latest
         buildtype:
           - debug
@@ -28,6 +29,10 @@ jobs:
         include:
           - os: macos-latest
             cc: clang
+          - os: ubuntu-latest
+            cc: clang
+          - os: ubuntu-latest
+            cc: gcc
           - os: windows-latest
             cc: cl
     env:
