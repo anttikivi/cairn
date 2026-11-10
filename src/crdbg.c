@@ -99,9 +99,9 @@ crdlog(const char *expr, const char *file, int line)
 #ifdef _WIN32
     {
         HANDLE handle = GetStdHandle(STD_ERROR_HANDLE);
-        DWORD written = 0U;
         if ((handle != NULL) && (handle != INVALID_HANDLE_VALUE))
         {
+            DWORD written = 0U;
             crbool end = CR_FALSE;
             while ((written < (DWORD)len) && !end)
             {
