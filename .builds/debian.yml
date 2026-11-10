@@ -9,6 +9,7 @@ packages:
   - clang
   - clang-format
   - clang-tidy
+  - cppcheck
   - libclang-rt-dev
   - meson
 
@@ -69,6 +70,7 @@ tasks:
           git push git@github.com:anttikivi/cairn.git "${GIT_REF}:${GIT_REF}"
           ;;
       esac
+
   - deps: |
       curl -LsSf https://astral.sh/uv/install.sh | sudo env UV_UNMANAGED_INSTALL="/usr/local/bin" sh
       cd muon
@@ -78,86 +80,174 @@ tasks:
 
   - lint: |
       cd cairn
-      CC=clang meson setup build/lint -Dbuildtype=debug
+      meson setup build/lint -Dbuildtype=debug
       ninja -C build/lint clang-format-check
-      ninja -C build/lint clang-tidy
       ninja -C build/lint reuse-check
 
-  - build: |
+  - gcc_default: |
+      CONF_NAME=gcc_default
       cd cairn
-      meson setup build/debug -Dbuildtype=debug
-      meson compile -C build/debug
+      meson setup "build/${CONF_NAME}" -Dbuildtype=debug
+      meson compile -C "build/${CONF_NAME}"
+      meson test -C "build/${CONF_NAME}" --print-errorlogs
+      ninja -C "build/${CONF_NAME}" cppcheck
 
-  - test: |
+  - gcc_default_release: |
+      CONF_NAME=gcc_default_release
       cd cairn
-      meson test -C build/debug --print-errorlogs
+      meson setup "build/${CONF_NAME}" -Dbuildtype=release
+      meson compile -C "build/${CONF_NAME}"
+      meson test -C "build/${CONF_NAME}" --print-errorlogs
 
-  - build_asan_ubsan: |
+  - gcc_default_asan_ubsan: |
+      CONF_NAME=gcc_default_asan_ubsan
       cd cairn
-      meson setup build/debug_asan_ubsan -Dbuildtype=debug -Db_sanitize=address,undefined
-      meson compile -C build/debug_asan_ubsan
+      meson setup "build/${CONF_NAME}" -Dbuildtype=debug -Db_sanitize=address,undefined
+      meson compile -C "build/${CONF_NAME}"
+      meson test -C "build/${CONF_NAME}" --print-errorlogs
 
-  - test_asan_ubsan: |
+  - gcc_minimal: |
+      CONF_NAME=gcc_minimal
       cd cairn
-      meson test -C build/debug_asan_ubsan --print-errorlogs
+      meson setup "build/${CONF_NAME}" -Dbuildtype=debug -Dc_std=c89 -Dstdint=disabled -Dstdbool=disabled -Dint64=disabled
+      meson compile -C "build/${CONF_NAME}"
+      meson test -C "build/${CONF_NAME}" --print-errorlogs
 
-  - build_memsan: |
+  - gcc_minimal_release: |
+      CONF_NAME=gcc_minimal_release
       cd cairn
-      CC=clang meson setup build/debug_memsan -Dbuildtype=debug -Db_sanitize=memory
-      meson compile -C build/debug_memsan
+      meson setup "build/${CONF_NAME}" -Dbuildtype=release -Dc_std=c89 -Dstdint=disabled -Dstdbool=disabled -Dint64=disabled
+      meson compile -C "build/${CONF_NAME}"
+      meson test -C "build/${CONF_NAME}" --print-errorlogs
 
-  - test_memsan: |
+  - gcc_c99: |
+      CONF_NAME=gcc_c99
       cd cairn
-      meson test -C build/debug_memsan --print-errorlogs
+      meson setup "build/${CONF_NAME}" -Dbuildtype=debug -Dc_std=c99 -Dstdint=enabled -Dstdbool=enabled -Dint64=enabled
+      meson compile -C "build/${CONF_NAME}"
+      meson test -C "build/${CONF_NAME}" --print-errorlogs
 
-  - build_release: |
+  - gcc_c99_release: |
+      CONF_NAME=gcc_c99_release
       cd cairn
-      meson setup build/release -Dbuildtype=release
-      meson compile -C build/release
+      meson setup "build/${CONF_NAME}" -Dbuildtype=release -Dc_std=c99 -Dstdint=enabled -Dstdbool=enabled -Dint64=enabled
+      meson compile -C "build/${CONF_NAME}"
+      meson test -C "build/${CONF_NAME}" --print-errorlogs
 
-  - test_release: |
+  - gcc_c99_asan_ubsan: |
+      CONF_NAME=gcc_c99_asan_ubsan
       cd cairn
-      meson test -C build/release --print-errorlogs
+      meson setup "build/${CONF_NAME}" -Dbuildtype=debug -Db_sanitize=address,undefined -Dc_std=c99 -Dstdint=enabled -Dstdbool=enabled -Dint64=enabled
+      meson compile -C "build/${CONF_NAME}"
+      meson test -C "build/${CONF_NAME}" --print-errorlogs
 
-  - muon_lint: |
+  - gcc_c99_fallback: |
+      CONF_NAME=gcc_c99_fallback
       cd cairn
-      CC=clang muon setup -Dbuildtype=debug build/muon/lint
-      muon -C build/muon/lint samu clang-format-check
-      muon -C build/muon/lint samu clang-tidy
-      muon -C build/muon/lint samu reuse-check
+      meson setup "build/${CONF_NAME}" -Dbuildtype=debug -Dc_std=c99 -Dstdint=disabled -Dstdbool=disabled -Dint64=enabled
+      meson compile -C "build/${CONF_NAME}"
+      meson test -C "build/${CONF_NAME}" --print-errorlogs
 
-  - muon_build: |
+  - gcc_c99_fallback_asan_ubsan: |
+      CONF_NAME=gcc_c99_fallback_asan_ubsan
       cd cairn
-      muon setup -Dbuildtype=debug build/muon/debug
-      muon -C build/muon/debug samu
+      meson setup "build/${CONF_NAME}" -Dbuildtype=debug -Db_sanitize=address,undefined -Dc_std=c99 -Dstdint=disabled -Dstdbool=disabled -Dint64=enabled
+      meson compile -C "build/${CONF_NAME}"
+      meson test -C "build/${CONF_NAME}" --print-errorlogs
 
-  - muon_test: |
+  - gcc_c99_fallback_boolean: |
+      CONF_NAME=gcc_c99_fallback_boolean
       cd cairn
-      muon -C build/muon/debug test
+      meson setup "build/${CONF_NAME}" -Dbuildtype=debug -Dc_std=c99 -Dstdint=enabled -Dstdbool=disabled
+      meson compile -C "build/${CONF_NAME}"
+      meson test -C "build/${CONF_NAME}" --print-errorlogs
 
-  - muon_build_asan_ubsan: |
+  - gcc_c99_fallback_int: |
+      CONF_NAME=gcc_c99_fallback_int
       cd cairn
-      muon setup -Dbuildtype=debug -Db_sanitize=address,undefined build/muon/debug_asan_ubsan
-      muon -C build/muon/debug_asan_ubsan samu
+      meson setup "build/${CONF_NAME}" -Dbuildtype=debug -Dc_std=c99 -Dstdint=disabled -Dstdbool=enabled
+      meson compile -C "build/${CONF_NAME}"
+      meson test -C "build/${CONF_NAME}" --print-errorlogs
 
-  - muon_test_asan_ubsan: |
+  - clang_default: |
+      export CC=clang
+      CONF_NAME=clang_default
       cd cairn
-      muon -C build/muon/debug_asan_ubsan test
+      meson setup "build/${CONF_NAME}" -Dbuildtype=debug
+      meson compile -C "build/${CONF_NAME}"
+      meson test -C "build/${CONF_NAME}" --print-errorlogs
+      ninja -C "build/${CONF_NAME}" cppcheck
 
-  - muon_build_memsan: |
+  - clang_default_release: |
+      export CC=clang
+      CONF_NAME=clang_default_release
       cd cairn
-      CC=clang muon setup -Dbuildtype=debug -Db_sanitize=memory build/muon/debug_memsan
-      muon -C build/muon/debug_memsan samu
+      meson setup "build/${CONF_NAME}" -Dbuildtype=release
+      meson compile -C "build/${CONF_NAME}"
+      meson test -C "build/${CONF_NAME}" --print-errorlogs
 
-  - muon_test_memsan: |
+  - clang_minimal: |
+      export CC=clang
+      CONF_NAME=clang_minimal
       cd cairn
-      muon -C build/muon/debug_memsan test
+      meson setup "build/${CONF_NAME}" -Dbuildtype=debug -Dc_std=c89 -Dstdint=disabled -Dstdbool=disabled -Dint64=disabled
+      meson compile -C "build/${CONF_NAME}"
+      meson test -C "build/${CONF_NAME}" --print-errorlogs
+      ninja -C "build/${CONF_NAME}" cppcheck
 
-  - muon_build_release: |
+  - clang_c99: |
+      export CC=clang
+      CONF_NAME=clang_c99
       cd cairn
-      muon setup -Dbuildtype=release build/muon/release
-      muon -C build/muon/release samu
+      meson setup "build/${CONF_NAME}" -Dbuildtype=debug -Dc_std=c99 -Dstdint=enabled -Dstdbool=enabled -Dint64=enabled
+      meson compile -C "build/${CONF_NAME}"
+      meson test -C "build/${CONF_NAME}" --print-errorlogs
+      ninja -C "build/${CONF_NAME}" cppcheck
 
-  - muon_test_release: |
+  - clang_c99_memsan: |
+      export CC=clang
+      CONF_NAME=clang_c99_memsan
       cd cairn
-      muon -C build/muon/release test
+      meson setup "build/${CONF_NAME}" -Dbuildtype=debug -Dc_std=c99 -Db_sanitize=memory
+      meson compile -C "build/${CONF_NAME}"
+      meson test -C "build/${CONF_NAME}" --print-errorlogs
+
+  - clang_c99_fallback: |
+      export CC=clang
+      CONF_NAME=clang_c99_fallback
+      cd cairn
+      meson setup "build/${CONF_NAME}" -Dbuildtype=debug -Dc_std=c99 -Dstdint=disabled -Dstdbool=disabled -Dint64=enabled
+      meson compile -C "build/${CONF_NAME}"
+      meson test -C "build/${CONF_NAME}" --print-errorlogs
+      ninja -C "build/${CONF_NAME}" cppcheck
+
+  - clang_c99_fallback_memsan: |
+      export CC=clang
+      CONF_NAME=clang_c99_fallback_memsan
+      cd cairn
+      meson setup "build/${CONF_NAME}" -Dbuildtype=debug -Db_sanitize=memory -Dc_std=c99 -Dstdint=disabled -Dstdbool=disabled -Dint64=enabled
+      meson compile -C "build/${CONF_NAME}"
+      meson test -C "build/${CONF_NAME}" --print-errorlogs
+
+  - clang_c99_fallback_boolean: |
+      export CC=clang
+      CONF_NAME=clang_c99_fallback_boolean
+      cd cairn
+      meson setup "build/${CONF_NAME}" -Dbuildtype=debug -Dc_std=c99 -Dstdint=enabled -Dstdbool=disabled
+      meson compile -C "build/${CONF_NAME}"
+      meson test -C "build/${CONF_NAME}" --print-errorlogs
+
+  - clang_c99_fallback_int: |
+      export CC=clang
+      CONF_NAME=clang_c99_fallback_int
+      cd cairn
+      meson setup "build/${CONF_NAME}" -Dbuildtype=debug -Dc_std=c99 -Dstdint=disabled -Dstdbool=enabled
+      meson compile -C "build/${CONF_NAME}"
+      meson test -C "build/${CONF_NAME}" --print-errorlogs
+
+  - muon: |
+      CONF_NAME=muon
+      cd cairn
+      muon setup -Dbuildtype=debug "build/${CONF_NAME}"
+      muon -C "build/${CONF_NAME}" samu
+      muon -C "build/${CONF_NAME}" test
