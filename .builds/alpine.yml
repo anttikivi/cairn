@@ -18,29 +18,23 @@ sources:
   - https://git.sr.ht/~anttikivi/cairn
 
 tasks:
-  - build: |
+  - gcc_default: |
+      CONF_NAME=gcc_default
       cd cairn
-      meson setup build/debug -Dbuildtype=debug
-      meson compile -C build/debug
+      meson setup "build/${CONF_NAME}" -Dbuildtype=debug
+      meson compile -C "build/${CONF_NAME}"
+      meson test -C "build/${CONF_NAME}" --print-errorlogs
 
-  - test: |
+  - gcc_default_release: |
+      CONF_NAME=gcc_default_release
       cd cairn
-      meson test -C build/debug --print-errorlogs
+      meson setup "build/${CONF_NAME}" -Dbuildtype=release
+      meson compile -C "build/${CONF_NAME}"
+      meson test -C "build/${CONF_NAME}" --print-errorlogs
 
-  - build_asan_ubsan: |
+  - gcc_default_asan_ubsan: |
+      CONF_NAME=gcc_default_asan_ubsan
       cd cairn
-      meson setup build/debug_asan_ubsan -Dbuildtype=debug -Db_sanitize=address,undefined
-      meson compile -C build/debug_asan_ubsan
-
-  - test_asan_ubsan: |
-      cd cairn
-      meson test -C build/debug_asan_ubsan --print-errorlogs
-
-  - build_release: |
-      cd cairn
-      meson setup build/release -Dbuildtype=release
-      meson compile -C build/release
-
-  - test_release: |
-      cd cairn
-      meson test -C build/release --print-errorlogs
+      meson setup "build/${CONF_NAME}" -Dbuildtype=debug -Db_sanitize=address,undefined
+      meson compile -C "build/${CONF_NAME}"
+      meson test -C "build/${CONF_NAME}" --print-errorlogs

@@ -15,20 +15,16 @@ sources:
   - https://git.sr.ht/~anttikivi/cairn
 
 tasks:
-  - build: |
+  - clang_default: |
+      CONF_NAME=clang_default
       cd cairn
-      meson setup build/debug -Dbuildtype=debug
-      meson compile -C build/debug
+      meson setup "build/${CONF_NAME}" -Dbuildtype=debug
+      meson compile -C "build/${CONF_NAME}"
+      meson test -C "build/${CONF_NAME}" --print-errorlogs
 
-  - test: |
+  - clang_default_release: |
+      CONF_NAME=clang_default_release
       cd cairn
-      meson test -C build/debug --print-errorlogs
-
-  - build_release: |
-      cd cairn
-      meson setup build/release -Dbuildtype=release
-      meson compile -C build/release
-
-  - test_release: |
-      cd cairn
-      meson test -C build/release --print-errorlogs
+      meson setup "build/${CONF_NAME}" -Dbuildtype=release
+      meson compile -C "build/${CONF_NAME}"
+      meson test -C "build/${CONF_NAME}" --print-errorlogs
