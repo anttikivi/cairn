@@ -19,8 +19,8 @@ typedef CR_BOOL_TYPE crbool;
 #    define CR_FALSE false
 #    define CR_TRUE  true
 #elif CR_USE_BUILTIN_BOOL
-#    define CR_FALSE ((crbool)0)
-#    define CR_TRUE  ((crbool)1)
+#    define CR_FALSE (0 != 0)
+#    define CR_TRUE  (0 == 0)
 #else
 #    define CR_FALSE (0)
 #    define CR_TRUE  (1)
