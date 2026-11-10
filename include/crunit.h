@@ -4,9 +4,9 @@
  * SPDX-License-Identifier: LGPL-3.0-or-later
  */
 
-#ifndef CAIRN_UNITS_H
-#define CAIRN_UNITS_H
+#ifndef CRUNIT_H
+#define CRUNIT_H
 
-#define CAIRN_KB(n) ((n) << 10U)
+#define CR_KB(n) ((n) << 10U)
 
 #endif

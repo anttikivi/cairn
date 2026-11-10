@@ -9,14 +9,14 @@
 
 #include <stddef.h>
 
-#ifndef CAIRN_BUFFER_MAX_BYTES
-#    include <cairn/units.h>
-#    define CAIRN_BUFFER_MAX_BYTES CAIRN_KB(1U)
+#ifndef CR_BUFFER_MAX_BYTES
+#    include <cairn/crunit.h>
+#    define CR_BUFFER_MAX_BYTES CR_KB(1U)
 #endif
 
 struct cairn_buffer
 {
-    char data[CAIRN_BUFFER_MAX_BYTES];
+    char data[CR_BUFFER_MAX_BYTES];
     size_t len;
 };
 

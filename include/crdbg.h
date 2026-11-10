@@ -4,8 +4,8 @@
  * SPDX-License-Identifier: LGPL-3.0-or-later
  */
 
-#ifndef CR_DEBUG_H
-#define CR_DEBUG_H
+#ifndef CRDBG_H
+#define CRDBG_H
 
 #include <cairn/crbool.h>
 #include <cairn/crdef.h>

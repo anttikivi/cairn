@@ -1,5 +1,5 @@
-#ifndef CR_DEF_H
-#define CR_DEF_H
+#ifndef CRDEF_H
+#define CRDEF_H
 
 #if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 201112L
 #    define CR_NORETURN _Noreturn

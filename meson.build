@@ -412,7 +412,7 @@ cfg.set10('CR_USE_STDINT', use_stdint)
 cfg.set10('CR_USE_STDBOOL', use_stdbool)
 cfg.set10('CR_USE_INT64', use_int64)
 
-subdir('include' / 'cairn')
+subdir('include')
 
 cfg_summary = {
     'C standard': get_option('c_std'),
@@ -423,22 +423,23 @@ cfg_summary = {
 }
 
 src_paths = [
-    'src/buffer.c',
+    'src/crbuf.c',
     'src/crdbg.c',
     'src/io.c',
     'src/strings.c',
     'src/test.c',
 ]
 header_paths = [
-    'include/cairn/buffer.h',
-    'include/cairn/crdbg.h',
-    'include/cairn/crbool.h',
-    'include/cairn/crint.h',
-    'include/cairn/error.h',
-    'include/cairn/io.h',
-    'include/cairn/strings.h',
-    'include/cairn/test.h',
-    'include/cairn/units.h',
+    'include/crbool.h',
+    'include/crbuf.h',
+    'include/crdbg.h',
+    'include/crdef.h',
+    'include/crint.h',
+    'include/crunit.h',
+    'include/error.h',
+    'include/io.h',
+    'include/strings.h',
+    'include/test.h',
 ]
 test_names = ['buffer', 'strings']
 test_paths = []
@@ -457,7 +458,7 @@ lib = static_library(
 dep = declare_dependency(include_directories: include, link_with: lib)
 meson.override_dependency('cairn', dep)
 
-install_subdir('include/cairn', install_dir: get_option('includedir'))
+install_subdir('include', install_dir: get_option('includedir'))
 
 import('pkgconfig').generate(lib, name: 'cairn')
 
@@ -618,7 +619,7 @@ if uvx.found()
         command: reuse_annotate + [
             '--style=c',
             '--multi-line',
-            root / 'include' / 'cairn' / 'config.h.in',
+            root / 'include' / 'crcfg.h.in',
         ],
     )
     alias_target(

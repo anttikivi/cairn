@@ -4,8 +4,8 @@
  * SPDX-License-Identifier: LGPL-3.0-or-later
  */
 
-#ifndef CR_INT_H
-#define CR_INT_H
+#ifndef CRINT_H
+#define CRINT_H
 
 #include <cairn/crcfg.h>
 

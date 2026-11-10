@@ -7,5 +7,5 @@ configure_file(
     output: 'crcfg.h',
     configuration: cfg,
     install: true,
-    install_dir: get_option('includedir') / 'cairn',
+    install_dir: get_option('includedir'),
 )
