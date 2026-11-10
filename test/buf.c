@@ -17,8 +17,7 @@ main(void)
     struct cr_buf buf;
     char filled[CR_BUF_MAX_BYTES];
     size_t i;
-    size_t full_expected_len = (size_t)CR_BUF_MAX_BYTES;
-    full_expected_len--;
+    size_t full_expected_len = sizeof(buf.data) - 1U;
 
     crtinit(&status, "buf");
 
