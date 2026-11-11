@@ -12,6 +12,7 @@
 #include <crdbg.h>
 #include <crerr.h>
 #include <crint.h>
+#include <crplat.h>
 
 #ifndef CR_IO_MAX_OUTPUT_BYTES
 #    define CR_IO_MAX_OUTPUT_BYTES (4096U)
@@ -26,10 +27,12 @@
         "value of CR_IO_MAX_OUTPUT_RETRIES is greater than the maximum of unsigned char"
 #endif
 
-#ifdef _WIN32
-#    define WIN32_LEAN_AND_MEAN
+#if CR_PLAT_WINDOWS
+#    ifndef WIN32_LEAN_AND_MEAN
+#        define WIN32_LEAN_AND_MEAN
+#    endif
 #    include <windows.h>
-#else
+#elif CR_PLAT_POSIX
 #    include <errno.h>
 #    include <unistd.h>
 #    ifndef CR_STDOUT_FD
@@ -40,7 +43,8 @@
 #    endif
 #endif
 
-#ifdef _WIN32
+#if CR_PLAT_WINDOWS
+
 static enum cr_err
 win32_write_all(DWORD handle_id, const char *s)
 {
@@ -99,7 +103,9 @@ win32_write_all(DWORD handle_id, const char *s)
 
     return result;
 }
-#else
+
+#elif CR_PLAT_POSIX
+
 static enum cr_err
 posix_write_all(int fd, const char *s)
 {
@@ -168,9 +174,9 @@ enum cr_err
 criout(const char *s)
 {
     CR_ASSERT(s != NULL);
-#ifdef _WIN32
+#if CR_PLAT_WINDOWS
     return win32_write_all(STD_OUTPUT_HANDLE, s);
-#else
+#elif CR_PLAT_POSIX
     return posix_write_all(CR_STDOUT_FD, s);
 #endif
 }
@@ -179,9 +185,9 @@ enum cr_err
 crioerr(const char *s)
 {
     CR_ASSERT(s != NULL);
-#ifdef _WIN32
+#if CR_PLAT_WINDOWS
     return win32_write_all(STD_ERROR_HANDLE, s);
-#else
+#elif CR_PLAT_POSIX
     return posix_write_all(CR_STDERR_FD, s);
 #endif
 }

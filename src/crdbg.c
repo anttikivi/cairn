@@ -11,11 +11,14 @@
 #include <stdlib.h>
 
 #include <crbool.h>
+#include <crplat.h>
 
-#ifdef _WIN32
-#    define WIN32_LEAN_AND_MEAN
+#if CR_PLAT_WINDOWS
+#    ifndef WIN32_LEAN_AND_MEAN
+#        define WIN32_LEAN_AND_MEAN
+#    endif
 #    include <windows.h>
-#else
+#elif CR_PLAT_POSIX
 #    include <crint.h>
 #    include <errno.h>
 #    include <unistd.h>
@@ -36,7 +39,7 @@
 #    define CR_ASSERT_MAX_OUTPUT_RETRIES (50U)
 #endif
 
-#ifndef _WIN32
+#if CR_PLAT_POSIX
 #    if (CR_ASSERT_MAX_OUTPUT_RETRIES < 1) ||                                  \
         (CR_ASSERT_MAX_OUTPUT_RETRIES > CR_LEAST_U8_MAX)
 #        error "assert output retry limit is outside the range"
@@ -96,7 +99,7 @@ crdlog(const char *expr, const char *file, int line)
 
     msg[len] = '\0';
 
-#ifdef _WIN32
+#if CR_PLAT_WINDOWS
     {
         HANDLE handle = GetStdHandle(STD_ERROR_HANDLE);
         if ((handle != NULL) && (handle != INVALID_HANDLE_VALUE))
@@ -124,7 +127,7 @@ crdlog(const char *expr, const char *file, int line)
             }
         }
     }
-#else
+#elif CR_PLAT_POSIX
     {
         size_t written = 0U;
         cr_least_u8 retries = 0U;

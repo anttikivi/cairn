@@ -9,11 +9,12 @@
 #include <crbool.h>
 #include <crerr.h>
 #include <crio.h>
+#include <crplat.h>
 #include <crstr.h>
 
-#ifdef _WIN32
+#if CR_PLAT_WINDOWS
 #    include <windows.h>
-#else
+#elif CR_PLAT_POSIX
 #    include <unistd.h>
 #endif
 
@@ -66,13 +67,13 @@ main(int argc, char **argv) /* cppcheck-suppress misra-c2012-8.6 */
                          sizeof("invalid-handle")) == 0)
         {
             expected = CR_ERR_IO_WRITE_FAILED;
-#ifdef _WIN32
+#if CR_PLAT_WINDOWS
             if (SetStdHandle(to_stderr ? STD_ERROR_HANDLE : STD_OUTPUT_HANDLE,
                              INVALID_HANDLE_VALUE) == FALSE)
             {
                 result = EXIT_FAILURE;
             }
-#else
+#elif CR_PLAT_POSIX
             if (close(to_stderr ? 2 : 1) != 0)
             {
                 result = EXIT_FAILURE;

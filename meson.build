@@ -433,6 +433,7 @@ header_paths = [
     'include/crerr.h',
     'include/crint.h',
     'include/crio.h',
+    'include/crplat.h',
     'include/crstr.h',
     'include/crunit.h',
 ]
