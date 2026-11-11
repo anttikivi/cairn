@@ -675,6 +675,24 @@ if cppcheck.found()
         endif
     else
         cppcheck_args += ['--library=posix']
+
+        foreach macro : ['__ANDROID__', '__APPLE__', '__linux__', '__MACH__']
+            macro_value = cc.get_define(macro)
+            if macro_value != ''
+                cppcheck_args += ['-D' + macro + '=' + macro_value]
+            endif
+        endforeach
+
+        if host_machine.system() == 'darwin'
+            target_os_osx = cc.get_define(
+                'TARGET_OS_OSX',
+                prefix: '#include <TargetConditionals.h>',
+            )
+            if target_os_osx == ''
+                error('could not get TARGET_OS_OSX from TargetConditionals.h')
+            endif
+            cppcheck_args += ['-DTARGET_OS_OSX=' + target_os_osx]
+        endif
     endif
 
     run_target('cppcheck', command: [cppcheck] + cppcheck_args)
