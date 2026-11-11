@@ -17,6 +17,11 @@
 #        error "unsupported Apple platform"
 #    endif
 
+#elif defined(__DragonFly__) || defined(__FreeBSD__) || defined(__NetBSD__) || \
+    defined(__OpenBSD__)
+
+#    define CR_PLAT_POSIX 1
+
 #elif defined(__linux__) && !defined(__ANDROID__)
 
 #    define CR_PLAT_POSIX 1

@@ -676,7 +676,16 @@ if cppcheck.found()
     else
         cppcheck_args += ['--library=posix']
 
-        foreach macro : ['__ANDROID__', '__APPLE__', '__linux__', '__MACH__']
+        foreach macro : [
+            '__ANDROID__',
+            '__APPLE__',
+            '__DragonFly__',
+            '__FreeBSD__',
+            '__linux__',
+            '__MACH__',
+            '__NetBSD__',
+            '__OpenBSD__',
+        ]
             macro_value = cc.get_define(macro)
             if macro_value != ''
                 cppcheck_args += ['-D' + macro + '=' + macro_value]
