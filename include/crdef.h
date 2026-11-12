@@ -17,4 +17,7 @@
 #    define CR_NORETURN
 #endif
 
+#define CR_EXIT_SUCCESS 0
+#define CR_EXIT_FAILURE 1
+
 #endif

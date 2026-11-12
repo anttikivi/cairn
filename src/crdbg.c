@@ -8,7 +8,6 @@
 
 #include <limits.h>
 #include <stddef.h>
-#include <stdlib.h>
 
 #include <crbool.h>
 #include <crplat.h>
@@ -184,9 +183,16 @@ crdterm(void)
 {
 #if defined(__clang__) || defined(__GNUC__)
     __builtin_trap();
-#else
-    /* Deviation-001 */
-    /* cppcheck-suppress misra-c2012-21.8 */
-    abort();
+#elif CR_PLAT_WINDOWS
+    TerminateProcess(GetCurrentProcess(), CR_EXIT_FAILURE);
+#elif CR_PLAT_POSIX
+    _exit(CR_EXIT_FAILURE);
 #endif
+
+    /*
+     * TODO: Stupid but ensures we don't return even if the termination fails.
+     */
+    for (;;)
+    {
+    }
 }

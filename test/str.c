@@ -6,6 +6,7 @@
 
 #include <stddef.h>
 
+#include <crdef.h>
 #include <crstr.h>
 #include <crtest.h>
 
@@ -91,14 +92,99 @@ test_crsncmp(void)
     return crtresult(&status);
 }
 
+static int
+test_crsnterm(void)
+{
+    struct cr_test status;
+    char unterminated[] = {'a', 'b', 'c'};
+    char last[] = {'a', 'b', '\0'};
+
+    crtinit(&status, "str/crsterm");
+
+    CR_EXPECT_INT_EQ(&status, CR_FALSE, crsterm(NULL, 0));
+    CR_EXPECT_INT_EQ(&status, CR_FALSE, crsterm(NULL, 256));
+    CR_EXPECT_INT_EQ(&status, CR_FALSE, crsterm("", 0));
+    CR_EXPECT_INT_EQ(&status, CR_FALSE, crsterm("abc", 0));
+    CR_EXPECT_INT_EQ(&status, CR_TRUE, crsterm("", 1));
+    CR_EXPECT_INT_EQ(&status, CR_TRUE, crsterm("", sizeof("")));
+    CR_EXPECT_INT_EQ(&status, CR_FALSE, crsterm("abc", 3));
+    CR_EXPECT_INT_EQ(&status, CR_TRUE, crsterm("abc", 4));
+    CR_EXPECT_INT_EQ(&status, CR_TRUE, crsterm("abc", sizeof("abc")));
+    CR_EXPECT_INT_EQ(&status, CR_TRUE, crsterm("abc", 256));
+    CR_EXPECT_INT_EQ(&status, CR_TRUE, crsterm("ab\0cd", 3));
+    CR_EXPECT_INT_EQ(&status, CR_FALSE, crsterm("ab\0cd", 2));
+    CR_EXPECT_INT_EQ(&status, CR_FALSE,
+                     crsterm(unterminated, sizeof(unterminated)));
+    CR_EXPECT_INT_EQ(&status, CR_TRUE, crsterm(last, sizeof(last)));
+    CR_EXPECT_INT_EQ(&status, CR_FALSE, crsterm(last, sizeof(last) - 1U));
+
+    return crtresult(&status);
+}
+
+static int
+test_crsnchr(void)
+{
+    struct cr_test status;
+    const char hello[] = "Hello, World!";
+    const char embedded[] = "ab\0cd";
+    const char high[] = "a\x80"
+                        "b";
+    char unterminated[] = {'a', 'b', 'c'};
+
+    crtinit(&status, "str/crsnchr");
+
+    CR_EXPECT_INT_EQ(&status, 1, crsnchr(NULL, 'a', 0) == NULL);
+    CR_EXPECT_INT_EQ(&status, 1, crsnchr(NULL, 'a', 256) == NULL);
+    CR_EXPECT_INT_EQ(&status, 1, crsnchr(hello, 'H', 0) == NULL);
+    CR_EXPECT_INT_EQ(&status, 1, crsnchr("", 'a', sizeof("")) == NULL);
+    CR_EXPECT_INT_EQ(&status, 1, crsnchr(hello, 'H', sizeof(hello)) == hello);
+    CR_EXPECT_INT_EQ(&status, 1,
+                     crsnchr(hello, ',', sizeof(hello)) == (hello + 5));
+    CR_EXPECT_INT_EQ(&status, 1,
+                     crsnchr(hello, '!', sizeof(hello)) == (hello + 12));
+    CR_EXPECT_INT_EQ(&status, 1,
+                     crsnchr(hello, 'l', sizeof(hello)) == (hello + 2));
+    CR_EXPECT_INT_EQ(&status, 1,
+                     crsnchr(hello, 'o', sizeof(hello)) == (hello + 4));
+    CR_EXPECT_INT_EQ(&status, 1, crsnchr(hello, 'z', sizeof(hello)) == NULL);
+    CR_EXPECT_INT_EQ(&status, 1, crsnchr(hello, 'h', sizeof(hello)) == NULL);
+    CR_EXPECT_INT_EQ(&status, 1, crsnchr(hello, '!', 12) == NULL);
+    CR_EXPECT_INT_EQ(&status, 1, crsnchr(hello, '!', 13) == (hello + 12));
+    CR_EXPECT_INT_EQ(&status, 1,
+                     crsnchr(embedded, 'c', sizeof(embedded)) == NULL);
+    CR_EXPECT_INT_EQ(
+        &status, 1, crsnchr(embedded, 'b', sizeof(embedded)) == (embedded + 1));
+    CR_EXPECT_INT_EQ(&status, 1, crsnchr(hello, '\0', sizeof(hello)) == NULL);
+    CR_EXPECT_INT_EQ(&status, 1, crsnchr("", '\0', sizeof("")) == NULL);
+    CR_EXPECT_INT_EQ(&status, 1,
+                     crsnchr(unterminated, 'c', sizeof(unterminated)) ==
+                         (unterminated + 2));
+    CR_EXPECT_INT_EQ(&status, 1,
+                     crsnchr(unterminated, 'd', sizeof(unterminated)) == NULL);
+    CR_EXPECT_INT_EQ(&status, 1,
+                     crsnchr(high, '\x80', sizeof(high)) == (high + 1));
+
+    return crtresult(&status);
+}
+
 int
 main(void) /* cppcheck-suppress misra-c2012-8.6 */
 {
     int result = test_crsnlen();
 
-    if (result == EXIT_SUCCESS)
+    if (result == CR_EXIT_SUCCESS)
     {
         result = test_crsncmp();
+    }
+
+    if (result == CR_EXIT_SUCCESS)
+    {
+        result = test_crsnterm();
+    }
+
+    if (result == CR_EXIT_SUCCESS)
+    {
+        result = test_crsnchr();
     }
 
     return result;

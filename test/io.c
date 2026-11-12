@@ -4,9 +4,8 @@
  * SPDX-License-Identifier: LGPL-3.0-or-later
  */
 
-#include <stdlib.h>
-
 #include <crbool.h>
+#include <crdef.h>
 #include <crerr.h>
 #include <crio.h>
 #include <crplat.h>
@@ -21,7 +20,7 @@
 int
 main(int argc, char **argv) /* cppcheck-suppress misra-c2012-8.6 */
 {
-    int result = EXIT_SUCCESS;
+    int result = CR_EXIT_SUCCESS;
     enum cr_err expected = CR_ERR_OK;
     enum cr_err err;
     const char *stream;
@@ -30,19 +29,19 @@ main(int argc, char **argv) /* cppcheck-suppress misra-c2012-8.6 */
 
     if (argc != 4)
     {
-        result = EXIT_FAILURE;
+        result = CR_EXIT_FAILURE;
     }
 
     stream = argv[1];
 
-    if ((result == EXIT_SUCCESS) &&
+    if ((result == CR_EXIT_SUCCESS) &&
         (crsncmp(stream, 7, "stdout", sizeof("stdout")) != 0) &&
         (crsncmp(stream, 7, "stderr", sizeof("stderr")) != 0))
     {
-        result = EXIT_FAILURE;
+        result = CR_EXIT_FAILURE;
     }
 
-    if (result == EXIT_SUCCESS)
+    if (result == CR_EXIT_SUCCESS)
     {
         if (crsncmp(stream, 7, "stderr", sizeof("stderr")) == 0)
         {
@@ -71,18 +70,18 @@ main(int argc, char **argv) /* cppcheck-suppress misra-c2012-8.6 */
             if (SetStdHandle(to_stderr ? STD_ERROR_HANDLE : STD_OUTPUT_HANDLE,
                              INVALID_HANDLE_VALUE) == FALSE)
             {
-                result = EXIT_FAILURE;
+                result = CR_EXIT_FAILURE;
             }
 #elif CR_PLAT_POSIX
             if (close(to_stderr ? 2 : 1) != 0)
             {
-                result = EXIT_FAILURE;
+                result = CR_EXIT_FAILURE;
             }
 #endif
         }
         else if (crsncmp(argv[2], 5, "text", sizeof("text")) != 0)
         {
-            result = EXIT_FAILURE;
+            result = CR_EXIT_FAILURE;
         }
         else
         {
@@ -90,7 +89,7 @@ main(int argc, char **argv) /* cppcheck-suppress misra-c2012-8.6 */
         }
     }
 
-    if (result == EXIT_SUCCESS)
+    if (result == CR_EXIT_SUCCESS)
     {
         /* False positive: the integer fallback is essentially Boolean. */
         /* cppcheck-suppress [misra-c2012-14.4, unmatchedSuppression] */
@@ -105,7 +104,7 @@ main(int argc, char **argv) /* cppcheck-suppress misra-c2012-8.6 */
 
         if (err != expected)
         {
-            result = EXIT_FAILURE;
+            result = CR_EXIT_FAILURE;
         }
     }
 

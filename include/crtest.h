@@ -7,7 +7,7 @@
 #ifndef CRTEST_H
 #define CRTEST_H
 
-#include <stdlib.h>
+#include <stddef.h>
 
 struct cr_test
 {

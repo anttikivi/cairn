@@ -6,6 +6,8 @@
 
 #include <crstr.h>
 
+#include <crbool.h>
+
 size_t
 crsnlen(const char *s, size_t n)
 {
@@ -56,6 +58,52 @@ crsncmp(const char *l, size_t n, const char *r, size_t m)
         else
         {
             ; /* no-op, result is already zero */
+        }
+    }
+
+    return result;
+}
+
+crbool
+crsterm(const char *s, size_t n)
+{
+    size_t i = 0U;
+    crbool b = CR_FALSE;
+
+    if (s != NULL)
+    {
+        while ((i < n) && (!b))
+        {
+            if (s[i] == '\0')
+            {
+                b = CR_TRUE;
+            }
+            else
+            {
+                i++;
+            }
+        }
+    }
+
+    return b;
+}
+
+const char *
+crsnchr(const char *s, const char c, size_t n)
+{
+    const char *result = NULL;
+
+    if (s != NULL)
+    {
+        size_t i;
+
+        for (i = 0U; (i < n) && (s[i] != '\0'); i++)
+        {
+            if (s[i] == c)
+            {
+                result = (s + i);
+                break;
+            }
         }
     }
 

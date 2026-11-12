@@ -7,6 +7,7 @@
 #include <crtest.h>
 
 #include <crbuf.h>
+#include <crdef.h>
 #include <crio.h>
 
 /*
@@ -26,13 +27,13 @@ crtinit(struct cr_test *status, const char *name)
 int
 crtresult(const struct cr_test *status)
 {
-    int result = EXIT_SUCCESS;
+    int result = CR_EXIT_SUCCESS;
     if (status->failures > 0U)
     {
         (void)crioerr("failures in ");
         (void)crioerr(status->name);
         (void)crioerr("\n");
-        result = EXIT_FAILURE;
+        result = CR_EXIT_FAILURE;
     }
     else
     {
