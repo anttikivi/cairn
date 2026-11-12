@@ -12,6 +12,7 @@
 #    include <TargetConditionals.h>
 
 #    if defined(TARGET_OS_OSX) && TARGET_OS_OSX
+#        define CR_PLAT_OSX   1
 #        define CR_PLAT_POSIX 1
 #    else
 #        error "unsupported Apple platform"
@@ -34,6 +35,10 @@
 
 #    error "unsupported platform"
 
+#endif
+
+#ifndef CR_PLAT_OSX
+#    define CR_PLAT_OSX 0
 #endif
 
 #ifndef CR_PLAT_POSIX

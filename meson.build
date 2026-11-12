@@ -424,7 +424,13 @@ cfg_summary = {
     'boolean type': bool_type,
 }
 
-src_paths = ['src/crbuf.c', 'src/crdbg.c', 'src/crio.c', 'src/crstr.c']
+src_paths = [
+    'src/crbuf.c',
+    'src/crdbg.c',
+    'src/crio.c',
+    'src/crproc.c',
+    'src/crstr.c',
+]
 header_paths = [
     'include/crbool.h',
     'include/crbuf.h',
@@ -434,6 +440,7 @@ header_paths = [
     'include/crint.h',
     'include/crio.h',
     'include/crplat.h',
+    'include/crproc.h',
     'include/crstr.h',
     'include/crunit.h',
 ]

@@ -48,3 +48,21 @@ print the expression that caused the test or assertion to fail. The operator is
 chosen instead of alternative solution, like constant string, to allow more
 practical use and to ensure that the printed expression always matches the
 expression that was tested.
+
+## Deviation-003
+
+### Rule
+
+21.5 The standard _header file_ `<signal.h>` shall not be used
+
+### Scope
+
+Using the functionality of `<signal.h>` in `src/crproc.c`
+
+### Rationale
+
+`src/crproc.c` handles spawning child processes. `<signal.h>` is included and
+used to handle setting signal masks for the spawned child processes.
+
+Currently permitted symbols include `sigset_t`, `sigemptyset`, `sigaddset`,
+`kill`, `SIGCHLD`, and `SIGPIPE`.
